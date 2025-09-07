@@ -79,11 +79,17 @@ const ProductList: React.FC = () => {
     fetchProducts(currentPage);
   }, [currentPage]);
 
-  const handleEdit = (p: Product) => {
-    // Exemple visuel : modal ou alert
-    setShowModal(true);
-    alert(`Éditer ${p.name} (exemple visuel)`); 
-  };
+
+  const handleDetails = (p:Product)=>{
+    navigate(`/admin/products/${p.id}`);
+  }
+
+
+  // const handleEdit = (p: Product) => {
+  //   // Exemple visuel : modal ou alert
+  //   setShowModal(true);
+  //   alert(`Éditer ${p.name} (exemple visuel)`); 
+  // };
   const handleDelete = (p: Product) => {
     // Exemple visuel : modal ou alert
     setShowModal(true);
@@ -146,9 +152,9 @@ const ProductList: React.FC = () => {
                   <td className="py-2 px-4 flex gap-3">
                     <button
                       className="text-blue-600 hover:underline"
-                      onClick={() => handleEdit(p)}
+                      onClick={() => handleDetails(p)}
                     >
-                      Éditer
+                      Détails
                     </button>
                     <button
                       className="text-red-600 hover:underline"

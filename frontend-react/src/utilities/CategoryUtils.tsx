@@ -22,7 +22,6 @@ export const fetchCategory = async (idCategory:number):Promise<Category> =>{
         const res = await api.get(`/categories/${idCategory}`);
         return res.data.data;
     } catch (error) {
-        throw new Error("Impossible la catégorie. Une erreur est survenue");
-        
+        throw new Error("Impossible la catégorie. Une erreur est survenue");      
     }
 }

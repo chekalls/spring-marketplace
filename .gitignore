@@ -1,0 +1,9 @@
+
+# backend
+backend-spring/target/*
+backend-spring/uploads/*
+
+# frontend
+frontend-react/node_modules/*
+frontend-react/.vscode/*
+frontend-react/__test__

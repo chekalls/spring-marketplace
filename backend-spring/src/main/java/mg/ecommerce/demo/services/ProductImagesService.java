@@ -1,0 +1,36 @@
+package mg.ecommerce.demo.services;
+
+import org.springframework.stereotype.Service;
+
+import mg.ecommerce.demo.model.Product;
+import mg.ecommerce.demo.model.ProductImages;
+import mg.ecommerce.demo.repository.ProductImagesRepository;
+
+@Service
+public class ProductImagesService {
+    private final ProductImagesRepository productImagesRepository;
+
+    public ProductImagesService(
+        ProductImagesRepository productImagesRepository
+    ){
+        this.productImagesRepository = productImagesRepository;
+    }
+
+    public ProductImages save(
+        Product product,
+        String imagePath,
+        boolean isMain,
+        int sortOrder
+    ) throws Exception{
+        try {
+            ProductImages productImages = new ProductImages();
+            productImages.setProduct(product);
+            productImages.setImagePath(imagePath);
+            productImages.setMain(isMain);
+            productImages.setSortOrder(sortOrder);
+            return productImagesRepository.save(productImages);
+        } catch (Exception e) {
+            throw new Exception("impossible d'enregistrer l'image : "+e.getMessage());
+        }
+    }
+}

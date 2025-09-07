@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,14 +21,24 @@ public class Product extends BaseEntity {
     @Column
     private String name;
 
-    @Column(nullable = true)
-    private String description;
-
+    @Column
     private double price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    // @OneToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "product_description_id",nullable = true)
+    // private ProductDescription productDescription;
+
+    // public ProductDescription getProductDescription() {
+    //     return productDescription;
+    // }
+
+    // public void setProductDescription(ProductDescription productDescription) {
+    //     this.productDescription = productDescription;
+    // }
 
     public double getPrice() {
         return price;
@@ -51,14 +62,6 @@ public class Product extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Category getCategory() {

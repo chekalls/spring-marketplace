@@ -11,7 +11,6 @@ public class ProductDto {
     private String description;
     private Long categoryId;
     private String category;
-
     private LocalDateTime createdAt;
 
     public ProductDto(Product product) {
@@ -32,13 +31,13 @@ public class ProductDto {
     public void copyFrom(Product product) {
         this.id = product.getId();
         this.name = product.getName();
-        this.description = product.getDescription();
         this.createdAt = product.getCreationDate();
         if(product.getCategory()!=null){
             Category category = product.getCategory();
             this.categoryId = category.getId();
             this.category = category.getName();
         }
+        // this.description = product.getDescription();
     }
 
     public String getCategory() {

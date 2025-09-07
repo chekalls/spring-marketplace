@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import mg.ecommerce.demo.dto.ProductDto;
 import mg.ecommerce.demo.model.Category;
 import mg.ecommerce.demo.model.Product;
-import mg.ecommerce.demo.model.ProductImages;
 import mg.ecommerce.demo.services.CategoryService;
 import mg.ecommerce.demo.services.FileStorageService;
 import mg.ecommerce.demo.services.ProductImagesService;
@@ -111,7 +109,7 @@ public class ProductController {
             product.setCategory(category);
             product.setName(name);
             product.setPrice(price);
-            product.setDescription(description);
+            // product.setDescription(description);
             
             String newId = this.productService.save(product);
             product.setId(newId);

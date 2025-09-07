@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../../../Api";
 import { useNavigate } from "react-router-dom";
+import { Product } from "../../../utilities/ProductUtils";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  quantite?: number;
-  category?: string;
-}
 
 interface ApiResponse {
   status_code: string;
@@ -81,8 +75,9 @@ const ProductList: React.FC = () => {
 
 
   const handleDetails = (p:Product)=>{
+    console.log(p.id);
     navigate(`/admin/products/${p.id}`);
-  }
+  };
 
 
   // const handleEdit = (p: Product) => {
@@ -144,7 +139,8 @@ const ProductList: React.FC = () => {
             </thead>
             <tbody>
               {products.map((p) => (
-                <tr key={p.id} className="border-b hover:bg-gray-50 transition">
+
+                  <tr key={p.id} className="border-b hover:bg-gray-50 transition" data-test={p.id} >
                   <td className="py-2 px-4">{p.name}</td>
                   <td className="py-2 px-4">{p.price/* .toLocaleString() */} Ar</td>
                   <td className="py-2 px-4">{p.quantite ?? 0}</td>

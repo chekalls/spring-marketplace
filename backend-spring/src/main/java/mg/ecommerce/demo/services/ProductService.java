@@ -1,6 +1,7 @@
 package mg.ecommerce.demo.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,10 @@ public class ProductService {
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+
+    public Optional<Product> findById(String productId){
+        return productRepository.findById(productId);
     }
 
     public Page<ProductDto> findAllPaginated(int page, int size) {

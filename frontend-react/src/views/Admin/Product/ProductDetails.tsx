@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Product, fetchProduct } from "../../../utilities/ProductUtils";
 
+// function ProductDetails(){
+//     return (
+//         <>Details d'un produit</>
+//     )
+// };
+
 function ProductDetails() {
   const [product, setProduct] = useState<Product>();
   const [error, setError] = useState("");
@@ -14,7 +20,8 @@ function ProductDetails() {
     const loadProduct = async () => {
       try {
         setLoading(true);
-        const data = await fetchProduct(Number(id));
+        const data = await fetchProduct(String(id));
+        console.log("data ===================="+data);
         setProduct(data);
       } catch (err: any) {
         setError(err.message || "Erreur lors du chargement du produit.");
@@ -60,12 +67,12 @@ function ProductDetails() {
       </div>
 
       <div className="mt-6 flex justify-end space-x-3">
-        <button
+        {/* <button
           onClick={() => navigate("/admin/products")}
           className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition"
         >
           Retour
-        </button>
+        </button> */}
         <button
           onClick={() => navigate(`/admin/products/edit/${id}`)}
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition"

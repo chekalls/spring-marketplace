@@ -1,7 +1,7 @@
 import { api } from "../Api";
 
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   price: number;
   quantite?: number;
@@ -9,7 +9,7 @@ export interface Product {
   createdAt?:string
 };
 
-export const fetchProduct = async(idProduct:number):Promise<Product> =>{
+export const fetchProduct = async(idProduct:string):Promise<Product> =>{
     try {
         const res = await api.get(`/products/${idProduct}`);
         return res.data.data;

@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,25 @@ public class ProductController {
         this.categoryService = categoryService;
         this.productImagesService = productImagesService;
         this.fileStorageService = fileStorageService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Response> findById(
+        @PathVariable("id") String productId
+    ){
+        Response response = new Response();
+        try {
+            Product product = productService.findById(productId).get();
+            if(product==null){
+                ResponseManager.resourceUnavaible(response, "impossible de trouver le produit");
+            }else{
+                ProductDto productDto = new ProductDto(product);
+                ResponseManager.success(response, productDto, "produit récupéré avec succès");
+            }
+        } catch (Exception e) {
+            ResponseManager.serveurError(response);
+        }
+        return new ResponseEntity<>(response,response.getStatus());
     }
 
     @GetMapping

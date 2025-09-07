@@ -17,12 +17,12 @@ public class ProductDto {
     private String category;
     private LocalDateTime createdAt;
 
-    public ProductDto(Product product){
-        copyFrom(product,false);
+    public ProductDto(Product product) {
+        copyFrom(product, false);
     }
 
-    public ProductDto(Product product,boolean withDetails) {
-        copyFrom(product,withDetails);
+    public ProductDto(Product product, boolean withDetails) {
+        copyFrom(product, withDetails);
     }
 
     public ProductDto() {
@@ -36,21 +36,25 @@ public class ProductDto {
         this.categoryId = (categoryId != null) ? categoryId : null;
     }
 
-    public void copyFrom(Product product,boolean withDetails) {
+    public void copyFrom(Product product, boolean withDetails) {
         this.id = product.getId();
         this.name = product.getName();
         this.createdAt = product.getCreationDate();
-        if(product.getCategory()!=null){
+        if (product.getCategory() != null) {
             Category category = product.getCategory();
             this.categoryId = category.getId();
             this.category = category.getName();
         }
-        if(withDetails){
-            ProductDescription productDescription = product.getProductDescription();
-            this.description = productDescription.getDescription();
-            this.marque = productDescription.getMarque();
-            this.codeProduit = productDescription.getCodeProduit();
-            this.provider = productDescription.getProvider().getName();
+        if (withDetails) {
+            ProductDescription productDescription = (product.getProductDescription() != null)
+                    ? product.getProductDescription()
+                    : null;
+            if (productDescription != null) {
+                this.description = productDescription.getDescription();
+                this.marque = productDescription.getMarque();
+                this.codeProduit = productDescription.getCodeProduit();
+                this.provider = productDescription.getProvider().getName();
+            }
         }
     }
 

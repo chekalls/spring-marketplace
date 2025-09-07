@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import mg.ecommerce.demo.dto.ProductDto;
 import mg.ecommerce.demo.model.Category;
 import mg.ecommerce.demo.model.Product;
-import mg.ecommerce.demo.model.ProductDescription;
 import mg.ecommerce.demo.services.CategoryService;
 import mg.ecommerce.demo.services.FileStorageService;
 import mg.ecommerce.demo.services.ProductDescriptionService;
@@ -63,6 +62,7 @@ public class ProductController {
             }
         } catch (Exception e) {
             ResponseManager.serveurError(response);
+            response.setMessage(e.getMessage());
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
@@ -155,8 +155,8 @@ public class ProductController {
                 return ResponseEntity.badRequest().body("Aucun fichier reçu");
             }
 
-            String fileName = file.getOriginalFilename();
-            long fileSize = file.getSize();
+            // String fileName = file.getOriginalFilename();
+            // long fileSize = file.getSize();
         } catch (Exception e) {
             ResponseManager.serveurError(response);
         }

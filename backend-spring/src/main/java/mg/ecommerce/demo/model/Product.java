@@ -32,14 +32,6 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "product_description_id",nullable = true)
     private ProductDescription productDescription;
 
-    // public ProductDescription getProductDescription() {
-    //     return productDescription;
-    // }
-
-    // public void setProductDescription(ProductDescription productDescription) {
-    //     this.productDescription = productDescription;
-    // }
-
     public ProductDescription getProductDescription() {
         return productDescription;
     }

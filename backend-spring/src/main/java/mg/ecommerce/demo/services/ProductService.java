@@ -24,16 +24,16 @@ public class ProductService {
         return productRepository.findById(productId);
     }
 
-    public Page<Product> findAllPaginated(int page, int size,boolean withDetails) {
+    public Page<Product> findAllPaginated(int page, int size, boolean withDetails) {
         Pageable pageable = PageRequest.of(page, size);
-        if(!withDetails){
+        if (!withDetails) {
             return productRepository.findAll(pageable);
         }
         return productRepository.findAll(pageable);
         // return products.map(product -> {
-        //     ProductDto dto = new ProductDto();
-        //     dto.copyFrom(product);
-        //     return dto;
+        // ProductDto dto = new ProductDto();
+        // dto.copyFrom(product);
+        // return dto;
         // });
     }
 
@@ -45,7 +45,16 @@ public class ProductService {
     }
 
     public String save(Product product) {
-        return this.productRepository.save(product).getId();
+        String newId = this.productRepository.save(product).getId();
+        product.setId(newId);
+        return newId;
+    }
+
+    public String save(
+            String name,
+            double price,
+            Long categoryId) {
+        return "";
     }
 
 }

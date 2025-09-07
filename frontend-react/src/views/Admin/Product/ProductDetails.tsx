@@ -21,7 +21,7 @@ function ProductDetails() {
       try {
         setLoading(true);
         const data = await fetchProduct(String(id));
-        console.log("data ===================="+data);
+        console.log("data ====================" + data);
         setProduct(data);
       } catch (err: any) {
         setError(err.message || "Erreur lors du chargement du produit.");
@@ -63,6 +63,10 @@ function ProductDetails() {
         <div className="py-2">
           <span className="font-semibold">Date d’acquisition :</span>{" "}
           {product?.createdAt}
+        </div>
+        <div className="py-2">
+          <span className="font-semibold">Détails :</span>{" "}
+          {product?.description}
         </div>
       </div>
 

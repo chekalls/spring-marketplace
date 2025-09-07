@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import mg.ecommerce.demo.model.Product;
 import mg.ecommerce.demo.model.ProductDescription;
 import mg.ecommerce.demo.model.Provider;
 import mg.ecommerce.demo.repository.ProductDescriptionRepository;
@@ -19,14 +18,12 @@ public class ProductDescriptionService {
     }
 
     public ProductDescription save(
-            Product product,
             String description,
             String marque,
             String codeProduit,
             Provider provider) throws Exception {
         try {
             ProductDescription productDescription = new ProductDescription();
-            productDescription.setProduct(product);
             productDescription.setDescription(description);
             productDescription.setMarque(marque);
             productDescription.setCodeProduit(codeProduit);

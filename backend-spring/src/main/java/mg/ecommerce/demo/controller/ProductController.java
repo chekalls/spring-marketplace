@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import mg.ecommerce.demo.dto.ProductDto;
 import mg.ecommerce.demo.model.Category;
 import mg.ecommerce.demo.model.Product;
+import mg.ecommerce.demo.model.ProductDescription;
 import mg.ecommerce.demo.services.CategoryService;
 import mg.ecommerce.demo.services.FileStorageService;
 import mg.ecommerce.demo.services.ProductDescriptionService;
@@ -57,7 +58,7 @@ public class ProductController {
             if (product == null) {
                 ResponseManager.resourceUnavaible(response, "impossible de trouver le produit");
             } else {
-                ProductDto productDto = new ProductDto(product,true);
+                ProductDto productDto = new ProductDto(product, true);
                 ResponseManager.success(response, productDto, "produit récupéré avec succès");
             }
         } catch (Exception e) {
@@ -76,10 +77,10 @@ public class ProductController {
         Response response = new Response();
 
         try {
-            Page<Product> paginatedProduct = productService.findAllPaginated(page, size,withDetails);
-            Page<ProductDto> paginatedDto = paginatedProduct.map(product->{
-                ProductDto dto= new ProductDto();
-                dto.copyFrom(product,withDetails);
+            Page<Product> paginatedProduct = productService.findAllPaginated(page, size, withDetails);
+            Page<ProductDto> paginatedDto = paginatedProduct.map(product -> {
+                ProductDto dto = new ProductDto();
+                dto.copyFrom(product, withDetails);
                 return dto;
             });
 
@@ -115,14 +116,13 @@ public class ProductController {
             Category category = this.categoryService.findById(categoryId)
                     .orElseThrow(() -> new Exception("Categorie introuvable"));
 
+            ProductDescription productDescription = productDescriptionService.save(description, description, null, null);
             Product product = new Product();
             product.setCategory(category);
             product.setName(name);
             product.setPrice(price);
-            String newId = this.productService.save(product);
-            product.setId(newId);
-
-            productDescriptionService.save(product, description, description, newId, null);
+            product.setProductDescription(productDescription);
+            this.productService.save(product);
 
             if (image1 != null && !image1.isEmpty()) {
                 String path1 = fileStorageService.save(image1);

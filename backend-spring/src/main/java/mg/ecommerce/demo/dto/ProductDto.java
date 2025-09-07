@@ -15,7 +15,17 @@ public class ProductDto {
     private String provider;
     private Long categoryId;
     private String category;
+    private double price;
     private LocalDateTime createdAt;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
 
     public ProductDto(Product product) {
         copyFrom(product, false);
@@ -40,6 +50,7 @@ public class ProductDto {
         this.id = product.getId();
         this.name = product.getName();
         this.createdAt = product.getCreationDate();
+        this.price = product.getPrice();
         if (product.getCategory() != null) {
             Category category = product.getCategory();
             this.categoryId = category.getId();
@@ -53,7 +64,8 @@ public class ProductDto {
                 this.description = productDescription.getDescription();
                 this.marque = productDescription.getMarque();
                 this.codeProduit = productDescription.getCodeProduit();
-                this.provider = productDescription.getProvider().getName();
+                this.provider = (productDescription.getProvider() != null) ? productDescription.getProvider().getName()
+                        : null;
             }
         }
     }

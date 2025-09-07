@@ -6,6 +6,7 @@ export interface Product {
   price: number;
   quantite?: number;
   category?: string;
+  description?:string;
   createdAt?:string
 };
 

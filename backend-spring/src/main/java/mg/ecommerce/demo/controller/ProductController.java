@@ -18,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import mg.ecommerce.demo.dto.ProductDto;
 import mg.ecommerce.demo.model.Category;
 import mg.ecommerce.demo.model.Product;
+import mg.ecommerce.demo.model.ProductDescription;
 import mg.ecommerce.demo.services.CategoryService;
 import mg.ecommerce.demo.services.FileStorageService;
+import mg.ecommerce.demo.services.ProductDescriptionService;
 import mg.ecommerce.demo.services.ProductImagesService;
 import mg.ecommerce.demo.services.ProductService;
 import mg.ecommerce.demo.utility.Response;
@@ -32,53 +34,61 @@ public class ProductController {
     private final CategoryService categoryService;
     private final ProductImagesService productImagesService;
     private final FileStorageService fileStorageService;
+    private final ProductDescriptionService productDescriptionService;
 
     public ProductController(
             ProductService productService,
             CategoryService categoryService,
             ProductImagesService productImagesService,
-            FileStorageService fileStorageService) {
+            FileStorageService fileStorageService,
+            ProductDescriptionService productDescriptionService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.productImagesService = productImagesService;
         this.fileStorageService = fileStorageService;
+        this.productDescriptionService = productDescriptionService;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Response> findById(
-        @PathVariable("id") String productId
-    ){
+            @PathVariable("id") String productId) {
         Response response = new Response();
         try {
             Product product = productService.findById(productId).get();
-            if(product==null){
+            if (product == null) {
                 ResponseManager.resourceUnavaible(response, "impossible de trouver le produit");
-            }else{
-                ProductDto productDto = new ProductDto(product);
+            } else {
+                ProductDto productDto = new ProductDto(product,true);
                 ResponseManager.success(response, productDto, "produit récupéré avec succès");
             }
         } catch (Exception e) {
             ResponseManager.serveurError(response);
         }
-        return new ResponseEntity<>(response,response.getStatus());
+        return new ResponseEntity<>(response, response.getStatus());
     }
 
     @GetMapping
     public ResponseEntity<Response> findAll(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "size", defaultValue = "15") Integer size,
-            @RequestParam(name = "search", defaultValue = "") String search) {
+            @RequestParam(name = "search", defaultValue = "") String search,
+            @RequestParam(name = "withDetails", defaultValue = "false") Boolean withDetails) {
         Response response = new Response();
 
         try {
-            Page<ProductDto> paginatedProduct = productService.findAllPaginated(page, size);
+            Page<Product> paginatedProduct = productService.findAllPaginated(page, size,withDetails);
+            Page<ProductDto> paginatedDto = paginatedProduct.map(product->{
+                ProductDto dto= new ProductDto();
+                dto.copyFrom(product,withDetails);
+                return dto;
+            });
 
             Map<String, Object> responseData = new HashMap<>();
-            responseData.put("liste_produit", paginatedProduct.getContent());
-            responseData.put("current_page", paginatedProduct.getNumber());
-            responseData.put("total_page", paginatedProduct.getTotalPages());
-            responseData.put("page_size", paginatedProduct.getSize());
-            responseData.put("total_element", paginatedProduct.getTotalElements());
+            responseData.put("liste_produit", paginatedDto.getContent());
+            responseData.put("current_page", paginatedDto.getNumber());
+            responseData.put("total_page", paginatedDto.getTotalPages());
+            responseData.put("page_size", paginatedDto.getSize());
+            responseData.put("total_element", paginatedDto.getTotalElements());
 
             response.setMultidata(responseData);
             ResponseManager.success(response, "", "liste des produits récupéré avec succès");
@@ -109,14 +119,14 @@ public class ProductController {
             product.setCategory(category);
             product.setName(name);
             product.setPrice(price);
-            // product.setDescription(description);
-            
             String newId = this.productService.save(product);
             product.setId(newId);
 
+            productDescriptionService.save(product, description, description, newId, null);
+
             if (image1 != null && !image1.isEmpty()) {
                 String path1 = fileStorageService.save(image1);
-                productImagesService.save(product,path1,true,1);
+                productImagesService.save(product, path1, true, 1);
             }
             if (image2 != null && !image2.isEmpty()) {
                 String path2 = fileStorageService.save(image2);
@@ -125,7 +135,7 @@ public class ProductController {
 
             if (image3 != null && !image3.isEmpty()) {
                 String path3 = fileStorageService.save(image3);
-                productImagesService.save(product, path3, false, 3);                
+                productImagesService.save(product, path3, false, 3);
             }
 
             ResponseManager.success(response, product, "Produit inséré avec succès");

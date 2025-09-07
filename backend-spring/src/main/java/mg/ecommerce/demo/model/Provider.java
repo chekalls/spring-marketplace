@@ -25,7 +25,7 @@ public class Provider extends BaseEntity {
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "provider")
-    private Set<Product> products;    
+    private Set<ProductDescription> productDescriptions;    
 
     public String getName() {
         return name;
@@ -51,11 +51,12 @@ public class Provider extends BaseEntity {
         this.description = description;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public Set<ProductDescription> getProductDescriptions() {
+        return productDescriptions;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setProductDescriptions(Set<ProductDescription> productDescriptions) {
+        this.productDescriptions = productDescriptions;
     }
+
 }

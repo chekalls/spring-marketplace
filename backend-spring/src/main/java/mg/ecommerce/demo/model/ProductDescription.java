@@ -30,7 +30,7 @@ public class ProductDescription extends BaseEntity {
     @JoinColumn(name = "provider_id", nullable = true)
     private Provider provider;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "productDescription")
     @JoinColumn(name = "product_id",nullable = true)
     private Product product;
 

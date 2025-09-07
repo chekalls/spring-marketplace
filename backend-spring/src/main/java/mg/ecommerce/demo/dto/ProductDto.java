@@ -4,17 +4,25 @@ import java.time.LocalDateTime;
 
 import mg.ecommerce.demo.model.Category;
 import mg.ecommerce.demo.model.Product;
+import mg.ecommerce.demo.model.ProductDescription;
 
 public class ProductDto {
     private String id;
     private String name;
     private String description;
+    private String marque;
+    private String codeProduit;
+    private String provider;
     private Long categoryId;
     private String category;
     private LocalDateTime createdAt;
 
-    public ProductDto(Product product) {
-        copyFrom(product);
+    public ProductDto(Product product){
+        copyFrom(product,false);
+    }
+
+    public ProductDto(Product product,boolean withDetails) {
+        copyFrom(product,withDetails);
     }
 
     public ProductDto() {
@@ -28,7 +36,7 @@ public class ProductDto {
         this.categoryId = (categoryId != null) ? categoryId : null;
     }
 
-    public void copyFrom(Product product) {
+    public void copyFrom(Product product,boolean withDetails) {
         this.id = product.getId();
         this.name = product.getName();
         this.createdAt = product.getCreationDate();
@@ -37,7 +45,13 @@ public class ProductDto {
             this.categoryId = category.getId();
             this.category = category.getName();
         }
-        // this.description = product.getDescription();
+        if(withDetails){
+            ProductDescription productDescription = product.getProductDescription();
+            this.description = productDescription.getDescription();
+            this.marque = productDescription.getMarque();
+            this.codeProduit = productDescription.getCodeProduit();
+            this.provider = productDescription.getProvider().getName();
+        }
     }
 
     public String getCategory() {
@@ -70,6 +84,38 @@ public class ProductDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getMarque() {
+        return marque;
+    }
+
+    public void setMarque(String marque) {
+        this.marque = marque;
+    }
+
+    public String getCodeProduit() {
+        return codeProduit;
+    }
+
+    public void setCodeProduit(String codeProduit) {
+        this.codeProduit = codeProduit;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
 }

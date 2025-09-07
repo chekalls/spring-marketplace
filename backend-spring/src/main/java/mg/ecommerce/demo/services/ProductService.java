@@ -20,19 +20,21 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Optional<Product> findById(String productId){
+    public Optional<Product> findById(String productId) {
         return productRepository.findById(productId);
     }
 
-    public Page<ProductDto> findAllPaginated(int page, int size) {
+    public Page<Product> findAllPaginated(int page, int size,boolean withDetails) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productRepository.findAll(pageable);
-
-        return products.map(product -> {
-            ProductDto dto = new ProductDto();
-            dto.copyFrom(product);
-            return dto;
-        });
+        if(!withDetails){
+            return productRepository.findAll(pageable);
+        }
+        return productRepository.findAll(pageable);
+        // return products.map(product -> {
+        //     ProductDto dto = new ProductDto();
+        //     dto.copyFrom(product);
+        //     return dto;
+        // });
     }
 
     public List<ProductDto> findAll() {

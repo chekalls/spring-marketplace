@@ -87,12 +87,13 @@ public class ProductController {
             }
             product.setName(name);
             product.setCategory(category);
+            productService.update(product);
 
-            // Gestion des images : seulement remplacer celles fournies
+            // Gestion des images : remplacer seulement celles fournies
             List<ProductImages> existingImages = productImagesService.findByProductId(productId);
 
             if (image1 != null && !image1.isEmpty()) {
-                // Supprimer ancienne image principale si existante
+                // supprimer ancienne image principale si elle existe
                 existingImages.stream()
                         .filter(ProductImages::isMain)
                         .findFirst()

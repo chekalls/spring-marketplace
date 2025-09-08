@@ -14,17 +14,15 @@ public class ProductImagesService {
     private final ProductImagesRepository productImagesRepository;
 
     public ProductImagesService(
-        ProductImagesRepository productImagesRepository
-    ){
+            ProductImagesRepository productImagesRepository) {
         this.productImagesRepository = productImagesRepository;
     }
 
     public ProductImages save(
-        Product product,
-        String imagePath,
-        boolean isMain,
-        int sortOrder
-    ) throws Exception{
+            Product product,
+            String imagePath,
+            boolean isMain,
+            int sortOrder) throws Exception {
         try {
             ProductImages productImages = new ProductImages();
             productImages.setProduct(product);
@@ -33,19 +31,34 @@ public class ProductImagesService {
             productImages.setSortOrder(sortOrder);
             return productImagesRepository.save(productImages);
         } catch (Exception e) {
-            throw new Exception("impossible d'enregistrer l'image : "+e.getMessage());
+            throw new Exception("impossible d'enregistrer l'image : " + e.getMessage());
         }
     }
 
-    public void delete(Long productImagesId){
-        productImagesRepository.deleteById(productImagesId);
+    public void delete(ProductImages productImages) {
+        try {
+            productImagesRepository.delete(productImages);
+            System.out.println("deleting image N0:" + productImages.getId());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
-    public List<ProductImages> findByProductId(String productId){
+    public void delete(Long productImagesId) {
+        try {
+            productImagesRepository.deleteById(productImagesId);
+            System.out.println("deleting by id image N0:" + productImagesId);
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<ProductImages> findByProductId(String productId) {
         return productImagesRepository.findByProductId(productId);
     }
 
-    public Optional<ProductImages> findById(Long productImage){
+    public Optional<ProductImages> findById(Long productImage) {
         return productImagesRepository.findById(productImage);
     }
 }

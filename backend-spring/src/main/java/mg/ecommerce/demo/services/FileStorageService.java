@@ -26,10 +26,33 @@ public class FileStorageService {
         }
     }
 
-    public void delete(String filePath){
-        File file = new File(filePath);
-        if(file.exists()){
-            file.delete();
+    public void delete(String filePath) {
+        if (filePath == null || filePath.isEmpty())
+            return;
+
+        try {
+            // extraire juste le nom du fichier
+            String fileName = Paths.get(filePath).getFileName().toString();
+
+            // construire le chemin réel sur le disque
+            Path destinationFile = uploadDir.resolve(fileName).normalize();
+
+            File file = destinationFile.toFile();
+
+            if (file.exists()) {
+                boolean deleted = file.delete();
+                if (!deleted) {
+                    System.out.println("Impossible de supprimer le fichier : " + file.getAbsolutePath());
+                } else {
+                    System.out.println("Fichier supprimé : " + file.getAbsolutePath());
+                }
+            } else {
+                System.out.println("Fichier non trouvé : " + file.getAbsolutePath());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de la suppression du fichier : " + filePath, e);
         }
     }
 
@@ -46,13 +69,14 @@ public class FileStorageService {
             String extension = getFileExtension(file.getOriginalFilename());
             String fileName = UUID.randomUUID().toString() + (extension.isEmpty() ? "" : "." + extension);
 
+            // Chemin réel sur le disque
             Path destinationFile = uploadDir.resolve(fileName).normalize();
 
             // Copier le fichier
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
 
-            // Retourner URL publique
-            return "/images/" + fileName;
+            // Retourner URL publique correspondant au dossier exposé
+            return "/uploads/" + fileName;
 
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors de la sauvegarde du fichier " + file.getOriginalFilename(), e);

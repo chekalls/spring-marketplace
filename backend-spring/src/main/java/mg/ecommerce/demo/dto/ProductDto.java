@@ -20,6 +20,15 @@ public class ProductDto {
     private double price;
     private LocalDateTime createdAt;
     private String imagePrincipale;
+    private String[] imagesSecondaire;
+
+    public String[] getImagesSecondaire() {
+        return imagesSecondaire;
+    }
+
+    public void setImagesSecondaire(String[] imagesSecondaire) {
+        this.imagesSecondaire = imagesSecondaire;
+    }
 
     public String getImagePrincipale() {
         return imagePrincipale;
@@ -80,9 +89,22 @@ public class ProductDto {
         }
         if (product.getProductImages() != null) {
             Set<ProductImages> productImages = product.getProductImages();
-            this.imagePrincipale = productImages.stream().filter(ProductImages::isMain).findFirst().orElse(null)
-                    .getImagePath();
-                
+
+            if (productImages != null && !productImages.isEmpty()) {
+                this.imagePrincipale = productImages.stream()
+                        .filter(ProductImages::isMain)
+                        .map(ProductImages::getImagePath)
+                        .findFirst()
+                        .orElse(null);
+
+                this.imagesSecondaire = productImages.stream()
+                        .filter(img -> !img.isMain())
+                        .map(ProductImages::getImagePath)
+                        .toArray(String[]::new);
+            } else {
+                this.imagePrincipale = null;
+                this.imagesSecondaire = new String[0];
+            }
         }
 
     }

@@ -9,6 +9,7 @@ export interface Product {
   description?:string;
   createdAt?:string
   imagePrincipale?:string;
+  imagesSecondaire?:string[];
 };
 
 export const fetchProduct = async(idProduct:string):Promise<Product> =>{

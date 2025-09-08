@@ -72,6 +72,13 @@ function ProductDetails() {
           <span className="font-semibold">Representation :</span>{" "}
           <img src={getImageUrl(String(product?.imagePrincipale))} alt="No image" />
         </div>
+        <div className="py-2">
+          <span className="font-semibold">Image auxiliaire :</span>{" "}
+          {product?.imagesSecondaire?.forEach((image)=>{
+            ( <img src={getImageUrl(image)} alt="No image" /> )
+          })}
+        </div>
+
       </div>
 
       <div className="mt-6 flex justify-end space-x-3">

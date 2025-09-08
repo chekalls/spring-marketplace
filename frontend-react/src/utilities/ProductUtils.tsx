@@ -1,12 +1,16 @@
-import { api } from "../Api";
+import { api,API_PORT,API_URL } from "../Api";
 
 export interface Product {
   id: string;
   name: string;
   price: number;
   quantite?: number;
+  categoryId?:number;
   category?: string;
+  description?:string;
   createdAt?:string
+  imagePrincipale?:string;
+  imagesSecondaire?:string[];
 };
 
 export const fetchProduct = async(idProduct:string):Promise<Product> =>{
@@ -18,3 +22,6 @@ export const fetchProduct = async(idProduct:string):Promise<Product> =>{
     }
 };
 
+export const getImageUrl = (imagePath:string) =>{
+    return `${API_URL}:${API_PORT}${imagePath}`;
+}

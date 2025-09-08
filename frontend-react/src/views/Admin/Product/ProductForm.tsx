@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { api } from "../../../Api";
 import { Category,fetchCategories } from "../../../utilities/CategoryUtils";
 
@@ -33,7 +33,7 @@ function ProductForm() {
     setImages(newImages);
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");

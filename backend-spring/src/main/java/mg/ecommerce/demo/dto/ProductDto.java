@@ -1,10 +1,12 @@
 package mg.ecommerce.demo.dto;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import mg.ecommerce.demo.model.Category;
 import mg.ecommerce.demo.model.Product;
 import mg.ecommerce.demo.model.ProductDescription;
+import mg.ecommerce.demo.model.ProductImages;
 
 public class ProductDto {
     private String id;
@@ -15,7 +17,34 @@ public class ProductDto {
     private String provider;
     private Long categoryId;
     private String category;
+    private double price;
     private LocalDateTime createdAt;
+    private String imagePrincipale;
+    private String[] imagesSecondaire;
+
+    public String[] getImagesSecondaire() {
+        return imagesSecondaire;
+    }
+
+    public void setImagesSecondaire(String[] imagesSecondaire) {
+        this.imagesSecondaire = imagesSecondaire;
+    }
+
+    public String getImagePrincipale() {
+        return imagePrincipale;
+    }
+
+    public void setImagePrincipale(String imagePrincipale) {
+        this.imagePrincipale = imagePrincipale;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public ProductDto(Product product) {
         copyFrom(product, false);
@@ -40,6 +69,7 @@ public class ProductDto {
         this.id = product.getId();
         this.name = product.getName();
         this.createdAt = product.getCreationDate();
+        this.price = product.getPrice();
         if (product.getCategory() != null) {
             Category category = product.getCategory();
             this.categoryId = category.getId();
@@ -53,9 +83,30 @@ public class ProductDto {
                 this.description = productDescription.getDescription();
                 this.marque = productDescription.getMarque();
                 this.codeProduit = productDescription.getCodeProduit();
-                this.provider = productDescription.getProvider().getName();
+                this.provider = (productDescription.getProvider() != null) ? productDescription.getProvider().getName()
+                        : null;
             }
         }
+        if (product.getProductImages() != null) {
+            Set<ProductImages> productImages = product.getProductImages();
+
+            if (productImages != null && !productImages.isEmpty()) {
+                this.imagePrincipale = productImages.stream()
+                        .filter(ProductImages::isMain)
+                        .map(ProductImages::getImagePath)
+                        .findFirst()
+                        .orElse(null);
+
+                this.imagesSecondaire = productImages.stream()
+                        .filter(img -> !img.isMain())
+                        .map(ProductImages::getImagePath)
+                        .toArray(String[]::new);
+            } else {
+                this.imagePrincipale = null;
+                this.imagesSecondaire = new String[0];
+            }
+        }
+
     }
 
     public String getCategory() {

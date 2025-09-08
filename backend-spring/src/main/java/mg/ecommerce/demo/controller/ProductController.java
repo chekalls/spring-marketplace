@@ -1,15 +1,18 @@
 package mg.ecommerce.demo.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import mg.ecommerce.demo.dto.ProductDto;
 import mg.ecommerce.demo.model.Category;
 import mg.ecommerce.demo.model.Product;
+import mg.ecommerce.demo.model.ProductDescription;
+import mg.ecommerce.demo.model.ProductImages;
 import mg.ecommerce.demo.services.CategoryService;
 import mg.ecommerce.demo.services.FileStorageService;
 import mg.ecommerce.demo.services.ProductDescriptionService;
@@ -48,6 +53,101 @@ public class ProductController {
         this.productDescriptionService = productDescriptionService;
     }
 
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Response> modifyProduct(
+            @PathVariable("id") String productId,
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("price") Double price,
+            @RequestParam(value = "image1", required = false) MultipartFile image1,
+            @RequestParam(value = "image2", required = false) MultipartFile image2,
+            @RequestParam(value = "image3", required = false) MultipartFile image3) {
+
+        Response response = new Response();
+
+        try {
+            Product product = productService.findById(productId).orElse(null);
+            if (product == null) {
+                ResponseManager.resourceUnavaible(response, "produit introuvable");
+                return new ResponseEntity<>(response, response.getStatus());
+            }
+
+            // Mise à jour description
+            ProductDescription productDescription = product.getProductDescription();
+            productDescription.setDescription(description);
+            productDescription.setProduct(product);
+            productDescriptionService.update(productDescription);
+
+            // Mise à jour catégorie
+            Category category = categoryService.findById(categoryId).orElse(null);
+            if (category == null) {
+                ResponseManager.resourceUnavaible(response, "catégorie introuvable");
+                return new ResponseEntity<>(response, response.getStatus());
+            }
+            product.setName(name);
+            product.setPrice(price);
+            product.setCategory(category);
+            productService.update(product);
+
+            // Gestion des images : remplacer seulement celles fournies
+            List<ProductImages> existingImages = productImagesService.findByProductId(productId);
+
+            if (image1 != null && !image1.isEmpty()) {
+                // supprimer ancienne image principale si elle existe
+                existingImages.stream()
+                        .filter(ProductImages::isMain)
+                        .findFirst()
+                        .ifPresent(img -> {
+                            fileStorageService.delete(img.getImagePath());
+                            productImagesService.delete(img.getId());
+                        });
+
+                String path1 = fileStorageService.save(image1);
+                productImagesService.save(product, path1, true, 1);
+            }
+
+            if (image2 != null && !image2.isEmpty()) {
+                existingImages.stream()
+                        .filter(img -> !img.isMain() && img.getSortOrder() == 2)
+                        .findFirst()
+                        .ifPresent(img -> {
+                            fileStorageService.delete(img.getImagePath());
+                            productImagesService.delete(img.getId());
+                        });
+
+                System.out.println("image2");
+                String path2 = fileStorageService.save(image2);
+                productImagesService.save(product, path2, false, 2);
+            }
+
+            if (image3 != null && !image3.isEmpty()) {
+                existingImages.stream()
+                        .filter(img -> !img.isMain() && img.getSortOrder() == 3)
+                        .findFirst()
+                        .ifPresent(img -> {
+                            fileStorageService.delete(img.getImagePath());
+                            productImagesService.delete(img.getId());
+                        });
+                System.out.println("image3");
+
+                String path3 = fileStorageService.save(image3);
+                productImagesService.save(product, path3, false, 3);
+            }
+
+            response.setMessage("Produit mis à jour avec succès");
+            response.setStatus(HttpStatus.OK);
+            response.setStatus_code("200");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            ResponseManager.serveurError(response);
+        }
+
+        return new ResponseEntity<>(response, response.getStatus());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Response> findById(
             @PathVariable("id") String productId) {
@@ -57,7 +157,7 @@ public class ProductController {
             if (product == null) {
                 ResponseManager.resourceUnavaible(response, "impossible de trouver le produit");
             } else {
-                ProductDto productDto = new ProductDto(product,true);
+                ProductDto productDto = new ProductDto(product, true);
                 ResponseManager.success(response, productDto, "produit récupéré avec succès");
             }
         } catch (Exception e) {
@@ -76,10 +176,10 @@ public class ProductController {
         Response response = new Response();
 
         try {
-            Page<Product> paginatedProduct = productService.findAllPaginated(page, size,withDetails);
-            Page<ProductDto> paginatedDto = paginatedProduct.map(product->{
-                ProductDto dto= new ProductDto();
-                dto.copyFrom(product,withDetails);
+            Page<Product> paginatedProduct = productService.findAllPaginated(page, size, withDetails);
+            Page<ProductDto> paginatedDto = paginatedProduct.map(product -> {
+                ProductDto dto = new ProductDto();
+                dto.copyFrom(product, withDetails);
                 return dto;
             });
 
@@ -115,14 +215,14 @@ public class ProductController {
             Category category = this.categoryService.findById(categoryId)
                     .orElseThrow(() -> new Exception("Categorie introuvable"));
 
+            ProductDescription productDescription = productDescriptionService.save(description, description, null,
+                    null);
             Product product = new Product();
             product.setCategory(category);
             product.setName(name);
             product.setPrice(price);
-            String newId = this.productService.save(product);
-            product.setId(newId);
-
-            productDescriptionService.save(product, description, description, newId, null);
+            product.setProductDescription(productDescription);
+            this.productService.save(product);
 
             if (image1 != null && !image1.isEmpty()) {
                 String path1 = fileStorageService.save(image1);

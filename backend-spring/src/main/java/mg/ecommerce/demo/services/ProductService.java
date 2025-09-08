@@ -50,6 +50,10 @@ public class ProductService {
         return newId;
     }
 
+    public void update(Product product){
+        productRepository.save(product);
+    }
+
     public String save(
             String name,
             double price,

@@ -37,6 +37,10 @@ public class ProductImagesService {
         }
     }
 
+    public void delete(Long productImagesId){
+        productImagesRepository.deleteById(productImagesId);
+    }
+
     public List<ProductImages> findByProductId(String productId){
         return productImagesRepository.findByProductId(productId);
     }

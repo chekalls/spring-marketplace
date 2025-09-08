@@ -3,6 +3,7 @@ package mg.ecommerce.demo.services;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,6 +23,13 @@ public class FileStorageService {
             }
         } catch (IOException e) {
             throw new RuntimeException("Impossible de créer le dossier d'upload", e);
+        }
+    }
+
+    public void delete(String filePath){
+        File file = new File(filePath);
+        if(file.exists()){
+            file.delete();
         }
     }
 

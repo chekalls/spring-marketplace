@@ -1,5 +1,8 @@
 package mg.ecommerce.demo.services;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import mg.ecommerce.demo.model.Product;
@@ -32,5 +35,13 @@ public class ProductImagesService {
         } catch (Exception e) {
             throw new Exception("impossible d'enregistrer l'image : "+e.getMessage());
         }
+    }
+
+    public List<ProductImages> findByProductId(String productId){
+        return productImagesRepository.findByProductId(productId);
+    }
+
+    public Optional<ProductImages> findById(Long productImage){
+        return productImagesRepository.findById(productImage);
     }
 }

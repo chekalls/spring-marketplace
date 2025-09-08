@@ -5,6 +5,7 @@ export interface Product {
   name: string;
   price: number;
   quantite?: number;
+  categoryId?:number;
   category?: string;
   description?:string;
   createdAt?:string
@@ -22,5 +23,5 @@ export const fetchProduct = async(idProduct:string):Promise<Product> =>{
 };
 
 export const getImageUrl = (imagePath:string) =>{
-    return `${API_URL}:${API_PORT}/${imagePath}`;
+    return `${API_URL}:${API_PORT}${imagePath}`;
 }

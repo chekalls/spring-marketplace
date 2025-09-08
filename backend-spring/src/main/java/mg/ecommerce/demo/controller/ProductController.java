@@ -60,6 +60,7 @@ public class ProductController {
             @RequestParam("name") String name,
             @RequestParam("description") String description,
             @RequestParam("categoryId") Long categoryId,
+            @RequestParam("price") Double price,
             @RequestParam(value = "image1", required = false) MultipartFile image1,
             @RequestParam(value = "image2", required = false) MultipartFile image2,
             @RequestParam(value = "image3", required = false) MultipartFile image3) {
@@ -86,6 +87,7 @@ public class ProductController {
                 return new ResponseEntity<>(response, response.getStatus());
             }
             product.setName(name);
+            product.setPrice(price);
             product.setCategory(category);
             productService.update(product);
 
@@ -115,6 +117,7 @@ public class ProductController {
                             productImagesService.delete(img.getId());
                         });
 
+                System.out.println("image2");
                 String path2 = fileStorageService.save(image2);
                 productImagesService.save(product, path2, false, 2);
             }
@@ -127,6 +130,7 @@ public class ProductController {
                             fileStorageService.delete(img.getImagePath());
                             productImagesService.delete(img.getId());
                         });
+                System.out.println("image3");
 
                 String path3 = fileStorageService.save(image3);
                 productImagesService.save(product, path3, false, 3);

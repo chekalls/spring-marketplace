@@ -1,10 +1,12 @@
 package mg.ecommerce.demo.dto;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import mg.ecommerce.demo.model.Category;
 import mg.ecommerce.demo.model.Product;
 import mg.ecommerce.demo.model.ProductDescription;
+import mg.ecommerce.demo.model.ProductImages;
 
 public class ProductDto {
     private String id;
@@ -17,6 +19,15 @@ public class ProductDto {
     private String category;
     private double price;
     private LocalDateTime createdAt;
+    private String imagePrincipale;
+
+    public String getImagePrincipale() {
+        return imagePrincipale;
+    }
+
+    public void setImagePrincipale(String imagePrincipale) {
+        this.imagePrincipale = imagePrincipale;
+    }
 
     public double getPrice() {
         return price;
@@ -25,7 +36,6 @@ public class ProductDto {
     public void setPrice(double price) {
         this.price = price;
     }
-
 
     public ProductDto(Product product) {
         copyFrom(product, false);
@@ -68,6 +78,13 @@ public class ProductDto {
                         : null;
             }
         }
+        if (product.getProductImages() != null) {
+            Set<ProductImages> productImages = product.getProductImages();
+            this.imagePrincipale = productImages.stream().filter(ProductImages::isMain).findFirst().orElse(null)
+                    .getImagePath();
+                
+        }
+
     }
 
     public String getCategory() {

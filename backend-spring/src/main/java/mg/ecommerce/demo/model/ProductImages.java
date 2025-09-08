@@ -1,6 +1,7 @@
 package mg.ecommerce.demo.model;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,10 +22,13 @@ public class ProductImages extends BaseEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column(name = "image_path")
     private String imagePath;
 
+    @Column(name = "is_main")
     private boolean isMain;
 
+    @Column(name = "sort_order")
     private int sortOrder;
 
     public Long getId() {

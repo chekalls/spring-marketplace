@@ -17,7 +17,6 @@ public class FileStorageService {
 
     public FileStorageService() {
         try {
-            // Créer le dossier s’il n’existe pas
             if (!Files.exists(uploadDir)) {
                 Files.createDirectories(uploadDir);
             }
@@ -27,7 +26,7 @@ public class FileStorageService {
     }
 
     /**
-     * Sauvegarde un fichier sur le disque et retourne son chemin relatif
+     * Sauvegarde un fichier sur le disque et retourne son URL publique
      */
     public String save(MultipartFile file) {
         if (file.isEmpty()) {
@@ -44,8 +43,8 @@ public class FileStorageService {
             // Copier le fichier
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
 
-            // Retourner chemin relatif (utile pour l’API)
-            return "uploads/" + fileName;
+            // Retourner URL publique
+            return "/images/" + fileName;
 
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors de la sauvegarde du fichier " + file.getOriginalFilename(), e);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Product, fetchProduct } from "../../../utilities/ProductUtils";
+import { Product, fetchProduct,getImageUrl } from "../../../utilities/ProductUtils";
 
 // function ProductDetails(){
 //     return (
@@ -67,6 +67,10 @@ function ProductDetails() {
         <div className="py-2">
           <span className="font-semibold">Détails :</span>{" "}
           {product?.description}
+        </div>
+        <div className="py-2">
+          <span className="font-semibold">Representation :</span>{" "}
+          <img src={getImageUrl(String(product?.imagePrincipale))} alt="No image" />
         </div>
       </div>
 

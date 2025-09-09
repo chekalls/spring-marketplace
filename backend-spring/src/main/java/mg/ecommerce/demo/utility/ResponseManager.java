@@ -21,4 +21,10 @@ public class ResponseManager {
         response.setStatus_code("404");
         response.setMessage(message);
     }
+
+    public static void badRequest(Response response,String message){
+        response.setStatus(HttpStatus.BAD_REQUEST);
+        response.setStatus_code("400");
+        response.setMessage(message);
+    }
 }

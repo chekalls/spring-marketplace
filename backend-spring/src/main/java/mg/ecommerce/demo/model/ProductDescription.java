@@ -1,5 +1,6 @@
 package mg.ecommerce.demo.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,7 +31,7 @@ public class ProductDescription extends BaseEntity {
     @JoinColumn(name = "provider_id", nullable = true)
     private Provider provider;
 
-    @OneToOne(fetch = FetchType.LAZY,mappedBy = "productDescription")
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "productDescription",cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id",nullable = true)
     private Product product;
 

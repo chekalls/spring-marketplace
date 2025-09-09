@@ -1,27 +1,46 @@
-import { api,API_PORT,API_URL } from "../Api";
+import { api, API_PORT, API_URL } from "../Api";
 
 export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  quantite?: number;
-  categoryId?:number;
-  category?: string;
-  description?:string;
-  createdAt?:string
-  imagePrincipale?:string;
-  imagesSecondaire?:string[];
+    id: string;
+    name: string;
+    price: number;
+    quantity?: number;
+    categoryId?: number;
+    category?: string;
+    description?: string;
+    createdAt?: string
+    imagePrincipale?: string;
+    imagesSecondaire?: string[];
 };
 
-export const fetchProduct = async(idProduct:string):Promise<Product> =>{
+export interface StockProduct {
+    id: number;
+    quantity: number;
+    serialNumber?: string;
+    expirationDate?: string;
+    productId: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export const fetchProduct = async (idProduct: string): Promise<Product> => {
     try {
         const res = await api.get(`/products/${idProduct}`);
         return res.data.data;
     } catch (error) {
-        throw new Error("Impossible trouver le produit. Une erreur est survenue");   
+        throw new Error("Impossible trouver le produit. Une erreur est survenue");
     }
 };
 
-export const getImageUrl = (imagePath:string) =>{
+export const getImageUrl = (imagePath: string) => {
     return `${API_URL}:${API_PORT}${imagePath}`;
+}
+
+export const getProductStock = async (idProduct: string): Promise<StockProduct[]> => {
+    try {
+        const res = await api.get(`stock/${idProduct}`);
+        return res.data.data;
+    } catch (error) {
+        throw new Error("Impossible de récupérer le détails de son stock. Une erreur est survenue");
+    }
 }

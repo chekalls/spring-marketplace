@@ -1,5 +1,7 @@
 package mg.ecommerce.demo.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -28,16 +30,20 @@ public class Product extends BaseEntity {
     @Column
     private double price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_description_id",nullable = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_description_id", nullable = true)
     private ProductDescription productDescription;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "product" )
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
     private Set<ProductImages> productImages;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StockProduct> stockProducts = new ArrayList<>();
 
     public Set<ProductImages> getProductImages() {
         return productImages;
@@ -85,5 +91,13 @@ public class Product extends BaseEntity {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public List<StockProduct> getStockProducts() {
+        return stockProducts;
+    }
+
+    public void setStockProducts(List<StockProduct> stockProducts) {
+        this.stockProducts = stockProducts;
     }
 }

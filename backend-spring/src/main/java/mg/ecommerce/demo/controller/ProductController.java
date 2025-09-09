@@ -194,6 +194,7 @@ public class ProductController {
             ResponseManager.success(response, "", "liste des produits récupéré avec succès");
         } catch (Exception e) {
             ResponseManager.serveurError(response);
+            response.setMessage(e.getMessage());
         }
 
         return new ResponseEntity<>(response, response.getStatus());

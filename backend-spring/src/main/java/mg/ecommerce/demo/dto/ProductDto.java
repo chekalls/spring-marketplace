@@ -18,6 +18,16 @@ public class ProductDto {
     private Long categoryId;
     private String category;
     private double price;
+    private int quantity;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     private LocalDateTime createdAt;
     private String imagePrincipale;
     private String[] imagesSecondaire;
@@ -76,6 +86,8 @@ public class ProductDto {
             this.category = category.getName();
         }
         if (withDetails) {
+            // this.quantity = (product.getQuantity()!=null) ? product.getQuantity() : 0;
+            this.quantity = 0;
             ProductDescription productDescription = (product.getProductDescription() != null)
                     ? product.getProductDescription()
                     : null;

@@ -32,7 +32,9 @@ function ProductDetails() {
     if (!id || restockQty <= 0) return;
     try {
       setRestockLoading(true);
-      await api.post(`/products/${id}/restock`, { quantity: restockQty });
+      await api.post(`/stock/${id}`, { 
+        quantity: restockQty
+      });
 
       // met à jour localement sans recharger toute la page
       setProduct((prev) =>

@@ -25,7 +25,7 @@ public class StockProduct extends BaseEntity {
 
     private int quantity = 1;
 
-    @Column(name = "serial_number")
+    @Column(name = "serial_number",nullable = true)
     private String serialNumber;
 
     @Column(name = "expiration_date")

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,28 @@ public class CategoryController {
         this.fileStorageService = fileStorageService;
     }
 
+    @PutMapping("/{categoryId}")
+    @Transactional
+    public ResponseEntity<Response> editInformation(
+        @PathVariable("categoryId") Long categoryId,
+        @RequestBody CategoryDto requestArg
+    ){
+        Response response = new Response();
+        try {
+            Category category = categoryService.findById(categoryId).get();
+            if(category==null){
+                ResponseManager.resourceUnavaible(response, "catégorie introuvable dans la base de donnée");
+            }else{
+                category.setDescription(requestArg.getDescription());
+                category.setName(requestArg.getName());
+                categoryService.update(category);
+            }
+        } catch (Exception e) {
+            ResponseManager.serveurError(response);
+        }
+        return new ResponseEntity<>(response,response.getStatus());
+    }
+
     @PutMapping("/image/{categoryId}")
     @Transactional
     public ResponseEntity<Response> editImage(
@@ -47,7 +70,7 @@ public class CategoryController {
                 String path = fileStorageService.save(image);
                 category.setImagePath(path);
                 categoryService.update(category);
-                ResponseManager.success(response, category, "catégorie modifié avec succès");
+                ResponseManager.success(response, new CategoryDto(category), "catégorie modifié avec succès");
             }
         } catch (Exception e) {
             ResponseManager.serveurError(response);

@@ -5,6 +5,7 @@ export interface Category {
     name: string;
     description?: string;
     createdAt: string;
+    updatedAt?:string;
     nbProduct?:number;
     imagePath?: string;
 }
@@ -25,8 +26,16 @@ export const fetchCategory = async (idCategory:number):Promise<Category> =>{
     } catch (error) {
         throw new Error("Impossible la catégorie. Une erreur est survenue");      
     }
-}
+};
 
 export const getImageUrl = (imagePath: string) => {
     return `${API_URL}:${API_PORT}${imagePath}`;
+};
+
+export const uploadCategoryImage = async (imageFile:File):Promise<string> =>{
+    return "";
+};
+
+export const updateCategory = async (categoryId:Number,data:any) =>{
+
 }

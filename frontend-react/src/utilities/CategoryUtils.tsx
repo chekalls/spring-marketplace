@@ -1,4 +1,4 @@
-import { api } from "../Api";
+import { api,API_PORT,API_URL } from "../Api";
 
 export interface Category {
     id: number;
@@ -6,6 +6,7 @@ export interface Category {
     description?: string;
     createdAt: string;
     nbProduct?:number;
+    imagePath?: string;
 }
 
 export const fetchCategories = async (): Promise<Category[]> => {
@@ -24,4 +25,8 @@ export const fetchCategory = async (idCategory:number):Promise<Category> =>{
     } catch (error) {
         throw new Error("Impossible la catégorie. Une erreur est survenue");      
     }
+}
+
+export const getImageUrl = (imagePath: string) => {
+    return `${API_URL}:${API_PORT}${imagePath}`;
 }

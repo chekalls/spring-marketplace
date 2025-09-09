@@ -10,6 +10,15 @@ public class CategoryDto {
     private String description;
     private LocalDateTime createdAt;
     private int nbProduct;
+    private String imagePath;
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     public CategoryDto() {
     }
@@ -23,6 +32,7 @@ public class CategoryDto {
         this.name = category.getName();
         this.description = (category.getDescription() != null) ? category.getDescription() : "";
         this.createdAt = category.getCreationDate();
+        this.imagePath = category.getImagePath();
     }
 
     public int getNbProduct() {

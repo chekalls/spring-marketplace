@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { Category, fetchCategory } from "../../../utilities/CategoryUtils";
+import { Category, fetchCategory,getImageUrl } from "../../../utilities/CategoryUtils";
 import { useEffect, useState } from "react";
 
 function CategoryDetails() {
@@ -57,6 +57,10 @@ function CategoryDetails() {
         <p>
           <span className="font-semibold">Produits liés :</span>{" "}
           {category?.nbProduct}
+        </p>
+        <p>
+          <span>Representation :</span>
+          <img src={getImageUrl(String(category?.imagePath))} alt="" />
         </p>
       </div>
 

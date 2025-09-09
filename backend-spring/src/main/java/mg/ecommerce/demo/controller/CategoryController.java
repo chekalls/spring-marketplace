@@ -49,6 +49,7 @@ public class CategoryController {
                 category.setDescription(requestArg.getDescription());
                 category.setName(requestArg.getName());
                 categoryService.update(category);
+                ResponseManager.success(response, new CategoryDto(category), "modification effectué avec succès");
             }
         } catch (Exception e) {
             ResponseManager.serveurError(response);

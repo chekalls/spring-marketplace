@@ -47,5 +47,10 @@ export const uploadCategoryImage = async (imageFile: File, categoryId: Number): 
 };
 
 export const updateCategory = async (categoryId: Number, data: any) => {
-    
+    try {
+        const res = await api.put(`/categories/${categoryId}`,data);
+    } catch (error:any) {
+        throw new Error("Impossible de modifier les informations. Une erreur est survenue :" + error.message);
+        
+    }
 }

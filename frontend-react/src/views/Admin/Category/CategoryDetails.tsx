@@ -175,7 +175,7 @@ function CategoryDetails() {
                   
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <div className="text-sm font-medium text-gray-500 mb-1">Dernière modification</div>
-                    <div className="text-gray-800">{formatDate(String(category?.updatedAt))}</div>
+                    <div className="text-gray-800">{formatDate(category?.updatedAt)}</div>
                   </div>
                 </div>
               </div>

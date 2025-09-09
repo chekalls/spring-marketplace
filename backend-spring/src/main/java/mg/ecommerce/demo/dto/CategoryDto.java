@@ -9,8 +9,18 @@ public class CategoryDto {
     private String name;
     private String description;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
     private int nbProduct;
     private String imagePath;
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     public String getImagePath() {
         return imagePath;
@@ -32,6 +42,7 @@ public class CategoryDto {
         this.name = category.getName();
         this.description = (category.getDescription() != null) ? category.getDescription() : "";
         this.createdAt = category.getCreationDate();
+        this.updatedAt = category.getUpdateDate();
         this.imagePath = category.getImagePath();
     }
 

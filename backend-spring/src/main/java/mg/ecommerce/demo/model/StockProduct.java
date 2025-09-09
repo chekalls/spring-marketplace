@@ -2,6 +2,7 @@ package mg.ecommerce.demo.model;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,20 +20,35 @@ public class StockProduct extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private Product product;
 
     private int quantity = 1;
 
-    @Column(name = "serial_number",nullable = true)
+    @Column(name = "quantity_used")
+    private int quantityUsed = 0;
+
+    @Column(name = "serial_number", nullable = true)
     private String serialNumber;
 
     @Column(name = "expiration_date")
     private LocalDate expirationDate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stock_status_id")
+    private StockStatus stockStatus;
+
     @Column(name = "sold")
     private boolean sold = false;
+
+    public StockStatus getStockStatus() {
+        return stockStatus;
+    }
+
+    public void setStockStatus(StockStatus stockStatus) {
+        this.stockStatus = stockStatus;
+    }   
 
     public Product getProduct() {
         return product;

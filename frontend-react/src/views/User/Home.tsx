@@ -1,7 +1,6 @@
 // HomePage.tsx
 import React, { useEffect, useState } from "react";
-import { api } from "../../Api";
-import { Category,fetchCategories } from "../../utilities/CategoryUtils";
+import { Category, fetchCategories, getImageUrl } from "../../utilities/CategoryUtils";
 
 // interface Category {
 //     title: string;
@@ -53,25 +52,76 @@ const Home: React.FC = () => {
         <div className="px-4 md:px-8 lg:px-16">
             {error && <p className="mb-4 text-red-500">{error}</p>}
             {/* Categories */}
-            <h2 className="text-3xl font-bold text-center mb-12 relative after:block after:w-20 after:h-1 after:bg-gradient-to-r from-primary to-secondary after:mx-auto after:mt-4">
-                Nos Catégories
-            </h2>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                {/* En-tête avec style amélioré */}
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl font-bold text-gray-900 mb-4 relative inline-block">
+                        Nos Catégories
+                        <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></span>
+                    </h2>
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Découvrez notre sélection de produits soigneusement organisée pour vous offrir la meilleure expérience d'achat.
+                    </p>
+                </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                {categories.map((cat, index) => (
-                    <div
-                        key={index}
-                        className="category-card bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-xl hover:scale-105"
-                    >
-                        <div className={`category-img h-48 bg-red-50 flex items-center justify-center`}>
-                            <i className={`fas fa-apple-alt text-6xl text-primary category-icon`}></i>
+                {/* Grille de catégories améliorée */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    {categories.map((cat, index) => (
+                        <div
+                            key={cat.id || index}
+                            className="group bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 relative"
+                        >
+                            {/* Image de la catégorie avec effet de survol */}
+                            <div className="h-56 overflow-hidden relative">
+                                {cat.imagePath ? (
+                                    <img
+                                        src={getImageUrl(String(cat.imagePath))}
+                                        alt={cat.name}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        onError={(e) => {
+                                            e.currentTarget.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YzZjZmOSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkeT0iLjM1ZW0iIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMjRweCIgZmlsbD0iIzk5OSI+Q2F0ZWdvcnk8L3RleHQ+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGR5PSIxLjM1ZW0iIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTZweCIgZmlsbD0iIzk5OSI+aW1hZ2U8L3RleHQ+PC9zdmc+";
+                                        }}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+                                        <i className="fas fa-image text-4xl text-gray-300"></i>
+                                    </div>
+                                )}
+                                {/* Badge nombre de produits */}
+                                {cat?.nbProduct || 0 > 0 && (
+                                    <span className="absolute top-4 right-4 bg-white bg-opacity-90 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
+                                        {cat.nbProduct} produit{cat.nbProduct !== 1 ? 's' : ''}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Contenu texte */}
+                            <div className="p-6 text-center">
+                                <h3 className="font-bold text-xl text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                                    {cat.name}
+                                </h3>
+                                <p className="text-gray-600 line-clamp-2 h-12 overflow-hidden">
+                                    {cat.description || "Aucune description disponible"}
+                                </p>
+
+                                {/* Bouton d'action */}
+                                <button className="mt-5 px-5 py-2 bg-transparent border border-blue-500 text-blue-600 rounded-lg font-medium transition-all duration-300 group-hover:bg-blue-500 group-hover:text-white">
+                                    Voir les produits
+                                    <i className="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div className="p-6 text-center">
-                            <h3 className="font-bold text-lg mb-2">{cat.name}</h3>
-                            <p className="text-gray-600">{cat.description}</p>
-                        </div>
+                    ))}
+                </div>
+
+                {/* Indicateur de chargement ou état vide */}
+                {categories.length === 0 && (
+                    <div className="text-center py-16">
+                        <i className="fas fa-folder-open text-5xl text-gray-300 mb-4"></i>
+                        <h3 className="text-xl font-medium text-gray-500 mb-2">Aucune catégorie disponible</h3>
+                        <p className="text-gray-400">Les catégories apparaîtront ici une fois ajoutées.</p>
                     </div>
-                ))}
+                )}
             </div>
 
             {/* Featured Products */}

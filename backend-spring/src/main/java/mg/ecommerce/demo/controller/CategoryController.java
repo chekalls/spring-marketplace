@@ -51,6 +51,7 @@ public class CategoryController {
             }
         } catch (Exception e) {
             ResponseManager.serveurError(response);
+            response.setMessage("blablabla");
         }
         return new ResponseEntity<>(response, response.getStatus());
     }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Category, fetchCategory,uploadCategoryImage,updateCategory } from "../../../utilities/CategoryUtils";
+import { Category, fetchCategory,uploadCategoryImage,updateCategory,getImageUrl } from "../../../utilities/CategoryUtils";
 
 const CategoryEdit = () => {
   const { id } = useParams();
@@ -29,7 +29,7 @@ const CategoryEdit = () => {
           imagePath: category.imagePath || ""
         });
         if (category.imagePath) {
-          setImagePreview(category.imagePath);
+          setImagePreview(getImageUrl(category.imagePath));
         }
       } catch (err: any) {
         setError(err.message || "Erreur lors du chargement de la catégorie");
@@ -99,7 +99,7 @@ const CategoryEdit = () => {
       
       // Upload de la nouvelle image si elle a été modifiée
       if (imageFile) {
-        imagePath = await uploadCategoryImage(imageFile);
+        imagePath = await uploadCategoryImage(imageFile,Number(id));
       }
 
       // Mise à jour de la catégorie

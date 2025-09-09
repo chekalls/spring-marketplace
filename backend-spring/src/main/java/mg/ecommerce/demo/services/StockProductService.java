@@ -1,6 +1,7 @@
 package mg.ecommerce.demo.services;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,10 @@ public class StockProductService {
         StockProductRepository stockProductRepository
     ){
         this.stockProductRepository = stockProductRepository;
+    }
+
+    public List<StockProduct> findByProductId(String productId){
+        return stockProductRepository.findByProductId(productId);
     }
 
     public StockProduct save(

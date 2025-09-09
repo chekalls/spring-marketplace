@@ -36,7 +36,6 @@ function ProductDetails() {
         quantity: restockQty
       });
 
-      // met à jour localement sans recharger toute la page
       setProduct((prev) =>
         prev ? { ...prev, quantity: (prev.quantity || 0) + restockQty } : prev
       );

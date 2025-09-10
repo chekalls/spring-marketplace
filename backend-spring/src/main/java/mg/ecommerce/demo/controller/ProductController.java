@@ -172,11 +172,12 @@ public class ProductController {
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "size", defaultValue = "15") Integer size,
             @RequestParam(name = "search", defaultValue = "") String search,
-            @RequestParam(name = "withDetails", defaultValue = "false") Boolean withDetails) {
+            @RequestParam(name = "withDetails", defaultValue = "false") Boolean withDetails,
+            @RequestParam(name = "categoryId",required = false) Long categoryId) {
         Response response = new Response();
 
         try {
-            Page<Product> paginatedProduct = productService.findAllPaginated(page, size, withDetails);
+            Page<Product> paginatedProduct = productService.findAllPaginated(page, size, withDetails,categoryId);
             Page<ProductDto> paginatedDto = paginatedProduct.map(product -> {
                 ProductDto dto = new ProductDto();
                 dto.copyFrom(product, withDetails);
@@ -190,8 +191,8 @@ public class ProductController {
             responseData.put("page_size", paginatedDto.getSize());
             responseData.put("total_element", paginatedDto.getTotalElements());
 
-            response.setMultidata(responseData);
             ResponseManager.success(response, "", "liste des produits récupéré avec succès");
+            response.setMultidata(responseData);
         } catch (Exception e) {
             ResponseManager.serveurError(response);
             response.setMessage(e.getMessage());

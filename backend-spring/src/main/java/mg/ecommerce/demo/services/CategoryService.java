@@ -29,4 +29,8 @@ public class CategoryService {
     public int countNbProduct(Long categoryId){
         return categoryRepository.countNbProduct(categoryId);   
     }
+
+    public void update(Category category){
+        categoryRepository.save(category);
+    }
 }

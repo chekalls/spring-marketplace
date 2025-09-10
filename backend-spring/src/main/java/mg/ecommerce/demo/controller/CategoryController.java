@@ -3,14 +3,20 @@ package mg.ecommerce.demo.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import mg.ecommerce.demo.dto.CategoryDto;
 import mg.ecommerce.demo.model.Category;
 import mg.ecommerce.demo.services.CategoryService;
+import mg.ecommerce.demo.services.FileStorageService;
 import mg.ecommerce.demo.utility.Response;
 import mg.ecommerce.demo.utility.ResponseManager;
 
@@ -18,15 +24,64 @@ import mg.ecommerce.demo.utility.ResponseManager;
 @RequestMapping("/categories")
 public class CategoryController {
     private final CategoryService categoryService;
-    
+    private final FileStorageService fileStorageService;
+
+
     public CategoryController(
-        CategoryService categoryService
-    ){
+            CategoryService categoryService,
+            FileStorageService fileStorageService) {
         this.categoryService = categoryService;
+        this.fileStorageService = fileStorageService;
+    }
+
+    @PutMapping("/{categoryId}")
+    @Transactional
+    public ResponseEntity<Response> editInformation(
+        @PathVariable("categoryId") Long categoryId,
+        @RequestBody CategoryDto requestArg
+    ){
+        Response response = new Response();
+        try {
+            Category category = categoryService.findById(categoryId).get();
+            if(category==null){
+                ResponseManager.resourceUnavaible(response, "catégorie introuvable dans la base de donnée");
+            }else{
+                category.setDescription(requestArg.getDescription());
+                category.setName(requestArg.getName());
+                categoryService.update(category);
+                ResponseManager.success(response, new CategoryDto(category), "modification effectué avec succès");
+            }
+        } catch (Exception e) {
+            ResponseManager.serveurError(response);
+        }
+        return new ResponseEntity<>(response,response.getStatus());
+    }
+
+    @PutMapping("/image/{categoryId}")
+    @Transactional
+    public ResponseEntity<Response> editImage(
+            @PathVariable("categoryId") Long categoryId,
+            @RequestParam(value = "image", required = true) MultipartFile image) {
+        Response response = new Response();
+        try {
+            Category category = categoryService.findById(categoryId).get();
+            if (category == null) {
+                ResponseManager.resourceUnavaible(response, "catégorie introuvable");
+            } else {
+                String path = fileStorageService.save(image);
+                category.setImagePath(path);
+                categoryService.update(category);
+                ResponseManager.success(response, new CategoryDto(category), "catégorie modifié avec succès");
+            }
+        } catch (Exception e) {
+            ResponseManager.serveurError(response);
+            response.setMessage("blablabla");
+        }
+        return new ResponseEntity<>(response, response.getStatus());
     }
 
     @GetMapping
-    public ResponseEntity<Response> findAll(){
+    public ResponseEntity<Response> findAll() {
         Response response = new Response();
         try {
             List<CategoryDto> listCategories = this.categoryService.findAll();
@@ -34,17 +89,16 @@ public class CategoryController {
         } catch (Exception e) {
             ResponseManager.serveurError(response);
         }
-        return new ResponseEntity<>(response,response.getStatus());
+        return new ResponseEntity<>(response, response.getStatus());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Response> findById(
-        @PathVariable("id") Long categoryID
-    ){
+            @PathVariable("id") Long categoryID) {
         Response response = new Response();
         try {
-            Category category = this.categoryService.findById(categoryID).get(); 
-            if(category==null){
+            Category category = this.categoryService.findById(categoryID).get();
+            if (category == null) {
                 ResponseManager.resourceUnavaible(response, "impossible de trouver la catégorie");
             }
             CategoryDto categoryDto = new CategoryDto(category);
@@ -53,6 +107,6 @@ public class CategoryController {
         } catch (Exception e) {
             ResponseManager.serveurError(response);
         }
-        return new ResponseEntity<>(response,response.getStatus());
+        return new ResponseEntity<>(response, response.getStatus());
     }
 }

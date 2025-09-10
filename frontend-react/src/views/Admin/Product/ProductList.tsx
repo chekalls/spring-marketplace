@@ -143,7 +143,7 @@ const ProductList: React.FC = () => {
                   <tr key={p.id} className="border-b hover:bg-gray-50 transition" data-test={p.id} >
                   <td className="py-2 px-4">{p.name}</td>
                   <td className="py-2 px-4">{p.price/* .toLocaleString() */} Ar</td>
-                  <td className="py-2 px-4">{p.quantite ?? 0}</td>
+                  <td className="py-2 px-4">{p.quantity ?? 0}</td>
                   <td className="py-2 px-4">{p.category || "Non renseigné"}</td>
                   <td className="py-2 px-4 flex gap-3">
                     <button

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../../../Api";
 import { useNavigate } from "react-router-dom";
+import { Category } from "../../../utilities/CategoryUtils";
 
-
-interface Category {
-  id: number;
-  name: string;
-  description?: string;
-  // productCount: number;
-  // status: "active" | "inactive";
-  createdAt: string;
-}
+// interface Category { 
+//   id: number;
+//   name: string;
+//   description?: string;
+//   // productCount: number;
+//   // status: "active" | "inactive";
+//   createdAt: string;
+// }
 
 const PAGE_SIZE = 10;
 

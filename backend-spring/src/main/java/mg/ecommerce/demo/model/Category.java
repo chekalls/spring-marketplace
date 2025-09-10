@@ -27,6 +27,17 @@ public class Category extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private Set<Product> products;
 
+    @Column(name = "image_path",nullable = true)
+    private String imagePath;
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     public Long getId() {
         return id;
     }

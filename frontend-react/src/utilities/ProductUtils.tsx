@@ -23,6 +23,15 @@ export interface StockProduct {
     updatedAt?: string;
 }
 
+export const fetchProducts = async (data:any) :Promise<Product[]> =>{
+    try {
+        const res = await api.get(`/products`,data);
+        return res.data.multidata.liste_produit;
+    } catch (error) {
+        throw new Error("Impossible de récupérer les produit. Une erreur est survenue");
+    }
+}
+
 export const fetchProduct = async (idProduct: string): Promise<Product> => {
     try {
         const res = await api.get(`/products/${idProduct}`);

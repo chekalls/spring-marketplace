@@ -58,6 +58,7 @@ public class UserController {
                 User user = userService.findByEmail(userDto.getEmail())
                         .orElseThrow(() -> new Exception("utilisateur introuvable"));
                 ResponseManager.success(response, user, "connexion réussit");
+                // String jwt = jwt
             } else {
                 ResponseManager.success(response, "", "Email ou mot de passe incorrecte");
             }

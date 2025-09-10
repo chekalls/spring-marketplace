@@ -1,10 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
 import { api } from "../../../Api";
 import { Product, getImageUrl } from "../../../utilities/ProductUtils";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ScrollToTop from "../../../utilities/ScrollToTop";
+import { addProductToCart } from "../../../utilities/CartUtils";
 
 const ProductList: React.FC = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -18,6 +20,24 @@ const ProductList: React.FC = () => {
 
   const [searchParams] = useSearchParams();
   const categoryId = searchParams.get('categoryId') || null;
+
+
+  const hanleUserConnexion = async () =>{
+    
+  }
+
+  const loadProducts = async (productID: string) => {
+    try {
+      setLoading(true);
+      setError("");
+      // const data = await addProductToCart(productID);
+    } catch (err: any) {
+      setError(err.message || "Erreur lors du chargement de la catégorie.");
+      console.error("Erreur détaillée:", err);
+    }finally{
+      setLoading(false);
+    }
+  }
 
   const fetchProducts = useCallback(async (params?: any): Promise<any> => {
     try {
@@ -113,7 +133,7 @@ const ProductList: React.FC = () => {
 
   return (
     <>
-    <ScrollToTop />
+      <ScrollToTop />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="container mx-auto px-4">
           {/* En-tête avec filtre et recherche */}
@@ -249,8 +269,8 @@ const ProductList: React.FC = () => {
                       onClick={() => setPage(prev => Math.max(prev - 1, 0))}
                       disabled={page === 0}
                       className={`px-4 py-2 rounded-lg flex items-center ${page === 0
-                          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                          : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
                         }`}
                     >
                       <i className="fas fa-chevron-left mr-2 text-xs"></i>
@@ -271,8 +291,8 @@ const ProductList: React.FC = () => {
                               key={pageNum}
                               onClick={() => setPage(pageNum)}
                               className={`w-10 h-10 rounded-lg ${page === pageNum
-                                  ? "bg-blue-600 text-white"
-                                  : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
+                                ? "bg-blue-600 text-white"
+                                : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
                                 }`}
                             >
                               {pageNum + 1}
@@ -291,8 +311,8 @@ const ProductList: React.FC = () => {
                       onClick={() => setPage(prev => Math.min(prev + 1, totalPages - 1))}
                       disabled={page === totalPages - 1}
                       className={`px-4 py-2 rounded-lg flex items-center ${page === totalPages - 1
-                          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                          : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
                         }`}
                     >
                       Suivant

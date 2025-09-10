@@ -2,6 +2,7 @@ package mg.ecommerce.demo.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletResponse;
 import mg.ecommerce.demo.dto.UserDto;
 import mg.ecommerce.demo.model.User;
+import mg.ecommerce.demo.services.JwtService;
 import mg.ecommerce.demo.services.UserService;
 import mg.ecommerce.demo.utility.Response;
 import mg.ecommerce.demo.utility.ResponseManager;
@@ -20,10 +23,13 @@ import mg.ecommerce.demo.utility.ResponseManager;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final JwtService jwtService;
 
     public UserController(
-            UserService userService) {
+            UserService userService,
+            JwtService jwtService) {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping
@@ -51,6 +57,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<Response> login(
+            HttpServletResponse httpResponse,
             @RequestBody UserDto userDto) {
         Response response = new Response();
         try {
@@ -58,7 +65,16 @@ public class UserController {
                 User user = userService.findByEmail(userDto.getEmail())
                         .orElseThrow(() -> new Exception("utilisateur introuvable"));
                 ResponseManager.success(response, user, "connexion réussit");
-                // String jwt = jwt
+
+                String token = jwtService.generateToken(user.getEmail());
+
+                ResponseCookie cookie = ResponseCookie.from("jwt", token).httpOnly(true)
+                        .secure(false) // true en prod HTTPS
+                        .sameSite("Strict")
+                        .path("/")
+                        .maxAge(24 * 60 * 60)
+                        .build();
+                httpResponse.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, cookie.toString());
             } else {
                 ResponseManager.success(response, "", "Email ou mot de passe incorrecte");
             }
@@ -76,7 +92,7 @@ public class UserController {
         try {
             List<User> users = userService.findAllByTypeUser(typeUserId);
             List<UserDto> userDtos = users.stream().map(UserDto::new).toList();
-            System.out.println("type user ==================================="+users.size());
+            System.out.println("type user ===================================" + users.size());
             ResponseManager.success(response, userDtos, "liste récupéré avec succès");
         } catch (Exception e) {
             ResponseManager.serveurError(response);

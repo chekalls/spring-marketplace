@@ -24,12 +24,16 @@ public class ProductService {
         return productRepository.findById(productId);
     }
 
-    public Page<Product> findAllPaginated(int page, int size, boolean withDetails) {
+    public Page<Product> findAllPaginated(int page, int size, boolean withDetails,Long categoryId) {
         Pageable pageable = PageRequest.of(page, size);
-        if (!withDetails) {
+        if(categoryId!=null){
+            return productRepository.findAllPaginatedByCategory(categoryId, pageable);
+        }else{
             return productRepository.findAll(pageable);
         }
-        return productRepository.findAll(pageable);
+        // if (!withDetails) {
+        //     return productRepository.findAll(pageable);
+        // }
         // return products.map(product -> {
         // ProductDto dto = new ProductDto();
         // dto.copyFrom(product);

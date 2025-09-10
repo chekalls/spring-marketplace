@@ -3,16 +3,20 @@ import ProductList from "./ProductList";
 import ProductForm from "./ProductForm";
 import ProductDetails from "./ProductDetails";
 import EditProduct from "./ProductModificationForm";
+import ScrollToTop from "../../../utilities/ScrollToTop";
 
-const Product: React.FC = () =>{
+const Product: React.FC = () => {
     return (
-        <Routes>
-            <Route path="list" element={<ProductList />} />
-            <Route path="form" element={<ProductForm />} />
-            <Route path=":id" element={<ProductDetails />} />
-            <Route  path="edit/:id" element={<EditProduct />} />
-            <Route index element={<Navigate to="list" replace/>} />
-        </Routes>
+        <>
+            <Routes>
+                <Route path="list" element={<ProductList />} />
+                <Route path="form" element={<ProductForm />} />
+                <Route path=":id" element={<ProductDetails />} />
+                <Route path="edit/:id" element={<EditProduct />} />
+                <Route index element={<Navigate to="list" replace />} />
+            </Routes>
+
+        </>
     );
 }
 

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Category, fetchCategories, getImageUrl } from "../../utilities/CategoryUtils";
 import { API_URL, API_PORT } from "../../Api";
 import { useNavigate } from "react-router-dom";
-
+import ScrollToTop from "../../utilities/ScrollToTop";
 
 interface Product {
     name: string;
@@ -46,6 +46,7 @@ const Home: React.FC = () => {
     }, []);
     return (
         <>
+            <ScrollToTop />
             <section className="relative bg-gradient-to-r from-primary to-secondary text-white pt-16 pb-20 md:pt-24 md:pb-32 hero-section"
                 style={{ backgroundImage: `url(${bgUrl})` }
                 } >

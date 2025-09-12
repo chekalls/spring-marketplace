@@ -173,7 +173,9 @@ public class ProductController {
             @RequestParam(name = "size", defaultValue = "15") Integer size,
             @RequestParam(name = "search", defaultValue = "") String search,
             @RequestParam(name = "withDetails", defaultValue = "false") Boolean withDetails,
-            @RequestParam(name = "categoryId",required = false) Long categoryId) {
+            @RequestParam(name = "categoryId",required = false) Long categoryId,
+            @RequestParam(name = "userId",required = false) String userId
+            ) {
         Response response = new Response();
 
         try {

@@ -15,6 +15,7 @@ function EditProduct() {
     description: "",
     imagePrincipale: "",
     imagesSecondaire: [],
+    isInCart:false,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

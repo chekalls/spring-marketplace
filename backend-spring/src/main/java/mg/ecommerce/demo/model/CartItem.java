@@ -9,9 +9,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "cart_item")
+@Table(
+    name = "cart_item",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"cart_id","product_id"})
+    }
+)
 public class CartItem extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

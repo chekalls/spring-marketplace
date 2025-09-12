@@ -9,13 +9,14 @@ export interface Cart{
 }
 
 export const addProductToCart = async (productId:string,userId:string) =>{
+    console.log("product Id :"+productId);
+    console.log("userId : "+userId);
     try {
-        const formData = new FormData();
-        formData.append("productId",productId);
-        formData.append("userId",userId);
-        const rest = await api.post(`/cart`,formData);
+        const rest = await api.post(`/cart`,{
+            productId: productId,
+            userId: userId
+        });
     } catch (error:any) {
         throw new Error("Impossible d'ajouter le produit. Une erreur est survenue :" + error.message);
-        
     }
 }

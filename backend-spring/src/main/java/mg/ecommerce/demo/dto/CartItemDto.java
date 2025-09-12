@@ -6,19 +6,30 @@ public class CartItemDto {
     private String id;
     private String cartId;
     private String productId;
+    private String userId;
+
     private int quantity;
 
-    public CartItemDto(){}
+    public CartItemDto() {
+    }
 
-    public CartItemDto(CartItem cartItem){
+    public CartItemDto(CartItem cartItem) {
         copyFrom(cartItem);
     }
 
-    public void copyFrom(CartItem cartItem){
+    public void copyFrom(CartItem cartItem) {
         this.id = cartItem.getId();
         this.cartId = cartItem.getCart().getId();
         this.productId = cartItem.getProduct().getId();
         this.quantity = cartItem.getQuantity();
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getId() {

@@ -11,6 +11,7 @@ export interface Product {
     createdAt?: string
     imagePrincipale?: string;
     imagesSecondaire?: string[];
+    isInCart: boolean;
 };
 
 export interface StockProduct {
@@ -23,9 +24,26 @@ export interface StockProduct {
     updatedAt?: string;
 }
 
-export const fetchProducts = async (data:any) :Promise<Product[]> =>{
+export const getUserCartProduct = async (userId: string):Promise<Product[]> => {
     try {
-        const res = await api.get(`/products`,data);
+        
+    } catch (error) {
+        throw new Error("Impossible de récupérer les produit. Une erreur est survenue");
+    }
+}
+
+export const isInCart = async (productId: string, userId: string): Promise<boolean> => {
+    try {
+
+        return false;
+    } catch (error) {
+        throw new Error("Impossible de récupérer les produit. Une erreur est survenue");
+    }
+}
+
+export const fetchProducts = async (data: any): Promise<Product[]> => {
+    try {
+        const res = await api.get(`/products`, data);
         return res.data.multidata.liste_produit;
     } catch (error) {
         throw new Error("Impossible de récupérer les produit. Une erreur est survenue");

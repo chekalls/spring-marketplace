@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "../views/User/Home";
 import Product from "../views/User/Product/Product";
 import ScrollToTop from "../utilities/ScrollToTop";
+import Cart from "../views/User/Cart/Cart";
 
 const User: React.FC = () => {
     return (
@@ -14,6 +15,7 @@ const User: React.FC = () => {
                 <Routes>
                     <Route path="home" element={<Home />} />
                     <Route path="products/*" element={<Product />} />
+                    <Route path="cart/*" element={<Cart />} />
                     <Route index element={<Navigate to="home" replace />} />
                 </Routes>
             </main>

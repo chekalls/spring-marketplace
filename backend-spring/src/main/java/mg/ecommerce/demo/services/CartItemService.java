@@ -1,5 +1,7 @@
 package mg.ecommerce.demo.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import mg.ecommerce.demo.model.Cart;
@@ -15,6 +17,12 @@ public class CartItemService {
         CartItemRepository cartItemRepository
     ){
         this.cartItemRepository =cartItemRepository;
+    }
+
+    // public 
+
+    public boolean isProductInUserCart(String productId,String userId){
+        return cartItemRepository.findByProductAndUser(productId,userId).isPresent();
     }
 
     public CartItem create(Cart cart,Product product,int quantity){

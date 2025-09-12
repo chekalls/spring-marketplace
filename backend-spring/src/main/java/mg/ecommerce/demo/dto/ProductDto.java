@@ -19,6 +19,7 @@ public class ProductDto {
     private String category;
     private double price;
     private int quantity;
+    private boolean isInCart = false;
 
     public int getQuantity() {
         return quantity;

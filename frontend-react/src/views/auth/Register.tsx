@@ -20,7 +20,7 @@ const Register: React.FC = () => {
 
     try {
 
-      let typeUser = (await apiFetch("/type_user/type_admin",{
+      let typeUser = (await apiFetch("/type_user/type_client",{
         method: "GET",
         headers: { "Content-Type": "application/json" },
       })).data;
@@ -164,7 +164,7 @@ const Register: React.FC = () => {
         {/* Lien vers connexion */}
         <p className="mt-6 text-center text-sm text-gray-600">
           Déjà un compte ?{" "}
-          <Link to="/auth/login" className="text-green-600 font-semibold hover:underline">
+          <Link to="/auth/user/login" className="text-green-600 font-semibold hover:underline">
             Se connecter
           </Link>
         </p>

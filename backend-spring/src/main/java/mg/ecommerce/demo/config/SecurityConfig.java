@@ -2,6 +2,7 @@ package mg.ecommerce.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,16 +24,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/products/**").permitAll()
-                .requestMatchers("/categories/**").permitAll()
-                .requestMatchers("/uploads/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/**").permitAll()
+                        // .requestMatchers("/auth/**").permitAll()
+                        // .requestMatchers("/products/**").permitAll()
+                        // .requestMatchers("/categories/**").permitAll()
+                        // .requestMatchers("/uploads/**").permitAll()
+                        // .requestMatchers("/type_user/**").permitAll()
+                        // .requestMatchers("POST", "/users").permitAll()
+                        // .requestMatchers("POST", "/users/login").permitAll()
+                        // .requestMatchers("/cart/**").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -42,4 +47,3 @@ public class SecurityConfig {
         return http.getSharedObject(AuthenticationManagerBuilder.class).build();
     }
 }
-

@@ -32,9 +32,9 @@ export interface StockProduct {
     updatedAt?: string;
 }
 
-export const getUserCartProduct = async (userId: string):Promise<ProductPage> => {
+export const getUserCartProduct = async (userId: string,data:any):Promise<ProductPage> => {
     try {
-        const res = await api.get(`/cart/user/${userId}`);
+        const res = await api.get(`/cart/user/${userId}`,data);
         return res.data.multidata;
     } catch (error) {
         throw new Error("Impossible de récupérer les produit. Une erreur est survenue");

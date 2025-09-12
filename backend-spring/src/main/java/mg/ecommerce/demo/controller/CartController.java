@@ -54,6 +54,7 @@ public class CartController {
         this.typeUserService = typeUserService;
     }
 
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<Response> getCartContent(
             @PathVariable("userId") String userId,
@@ -61,7 +62,7 @@ public class CartController {
             @RequestParam(name = "size", defaultValue = "15") Integer size) {
         Response response = new Response();
         try {
-            Page<CartItem> cartItemPage = cartItemService.findCartItemByUserPaginated(userId, 0, 0, false);
+            Page<CartItem> cartItemPage = cartItemService.findCartItemByUserPaginated(userId, page, size, false);
             Page<ProductDto> paginatedProduct = cartItemPage.map(cartItem -> {
                 ProductDto dto = new ProductDto(cartItem.getProduct());
                 return dto;
@@ -78,6 +79,7 @@ public class CartController {
             response.setMultidata(responseData);
         } catch (Exception e) {
             ResponseManager.serveurError(response);
+            response.setMessage(e.getMessage());
         }
         return new ResponseEntity<>(response, response.getStatus());
     }

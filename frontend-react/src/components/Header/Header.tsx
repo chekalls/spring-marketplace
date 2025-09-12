@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
   const handleCartClick = () => {
-    window.location.href = "/cart";
+    window.location.href = "/user/cart";
   };
 
   const handleAccountClick = () => {

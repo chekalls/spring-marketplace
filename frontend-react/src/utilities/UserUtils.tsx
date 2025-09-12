@@ -1,3 +1,5 @@
-export const getConnectedUser = async () =>{
-    
+
+
+export const getConnectedUser = ():string =>{
+    return String(sessionStorage.getItem("userId"));    
 }

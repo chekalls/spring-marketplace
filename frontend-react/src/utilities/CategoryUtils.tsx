@@ -10,6 +10,21 @@ export interface Category {
     imagePath?: string;
 }
 
+export const updateItemQuantity = async (productId: string, userId: string, quantity: number) => {
+    try {
+        const res = await api.put(`/cart/product/${productId}`, null, {
+            params: {
+                userId: userId,
+                quantity: quantity
+            }
+        });
+
+        return res.data;
+    } catch (error) {
+        throw new Error("impossible de modifier la quantité");
+    }
+}
+
 export const fetchCategories = async (): Promise<Category[]> => {
     try {
         const res = await api.get("/categories");
@@ -48,9 +63,9 @@ export const uploadCategoryImage = async (imageFile: File, categoryId: Number): 
 
 export const updateCategory = async (categoryId: Number, data: any) => {
     try {
-        const res = await api.put(`/categories/${categoryId}`,data);
-    } catch (error:any) {
+        const res = await api.put(`/categories/${categoryId}`, data);
+    } catch (error: any) {
         throw new Error("Impossible de modifier les informations. Une erreur est survenue :" + error.message);
-        
+
     }
 }

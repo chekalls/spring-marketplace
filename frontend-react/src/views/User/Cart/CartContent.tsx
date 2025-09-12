@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { getUserCartProduct, Product,getImageUrl } from "../../../utilities/ProductUtils";
+import { getUserCartProduct, Product, getImageUrl } from "../../../utilities/ProductUtils";
 import { getConnectedUser } from "../../../utilities/UserUtils";
+import { updateItemQuantity } from "../../../utilities/CategoryUtils";
 
 const CartContent: React.FC = () => {
     const PAGE_SIZE = 15;
@@ -33,10 +34,21 @@ const CartContent: React.FC = () => {
         // puis rappeler fetchProducts() pour rafraîchir la liste
     };
 
-    const handleQuantityChange = (productId: string, delta: number) => {
-        // console.log("Modifier quantité", productId, delta);
-        
-        // Ici tu peux gérer l'incrément/décrément de la quantité
+    const handleQuantityChange = async (productId: string, newQuantity: number) => {
+        newQuantity = Math.max(0, newQuantity);
+        try {
+            await updateItemQuantity(productId, userId, newQuantity);
+
+            setProducts(prevProducts =>
+                prevProducts.map(product =>
+                    product.id === productId
+                        ? { ...product, quantity: newQuantity } 
+                        : product
+                )
+            );
+        } catch (err: any) {
+            console.error("Erreur lors de la mise à jour de la quantité", err);
+        }
     };
 
     const totalCartPrice = products.reduce((sum, p) => sum + (p.price ?? 0) * (p.quantity ?? 0), 0);
@@ -98,14 +110,14 @@ const CartContent: React.FC = () => {
                             <div className="flex items-center border rounded-lg overflow-hidden">
                                 <button
                                     className="px-3 py-1 bg-gray-200 hover:bg-gray-300 transition"
-                                    onClick={() => handleQuantityChange(p.id, -1)}
+                                    onClick={() => handleQuantityChange(p.id, (p.quantity || 0) - 1)}
                                 >
                                     -
                                 </button>
                                 <span className="px-4">{p.quantity ?? 0}</span>
                                 <button
                                     className="px-3 py-1 bg-gray-200 hover:bg-gray-300 transition"
-                                    onClick={() => handleQuantityChange(p.id, +1)}
+                                    onClick={() => handleQuantityChange(p.id, (p.quantity || 0) + 1)}
                                 >
                                     +
                                 </button>

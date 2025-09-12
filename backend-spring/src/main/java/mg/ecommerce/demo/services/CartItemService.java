@@ -1,6 +1,6 @@
 package mg.ecommerce.demo.services;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +32,16 @@ public class CartItemService {
 
     public boolean isProductInUserCart(String productId,String userId){
         return cartItemRepository.findByProductAndUser(productId,userId).isPresent();
+    }
+
+    public Optional<CartItem> findByProductAndUser(String productId,String userId){
+        return cartItemRepository.findByProductAndUser(productId, userId);
+    }
+
+    public void update(String productId,String userId,int quantity) throws Exception{
+        CartItem cartItem = cartItemRepository.findByProductAndUser(productId, userId).orElseThrow(() -> new Exception("Produits introuvable dans le panier"));
+        cartItem.setQuantity(quantity);
+        cartItemRepository.save(cartItem);
     }
 
     public CartItem create(Cart cart,Product product,int quantity){

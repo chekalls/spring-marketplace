@@ -1,7 +1,6 @@
 package mg.ecommerce.demo.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -10,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import mg.ecommerce.demo.dto.CartItemDto;
@@ -54,6 +53,21 @@ public class CartController {
         this.typeUserService = typeUserService;
     }
 
+    @PutMapping("/product/{idProduct}")
+    public ResponseEntity<Response> addItemQuantity(
+        @PathVariable("idProduct") String productId,
+        @RequestParam("userId") String userId,
+        @RequestParam(name = "quantity",defaultValue = "1") Integer quantity
+    ){
+        Response response = new Response();
+        try {
+            cartItemService.update(productId, userId, quantity);
+            ResponseManager.success(response, null,"quantité modifié avec");
+        } catch (Exception e) {
+            ResponseManager.serveurError(response);
+        }
+        return new ResponseEntity<>(response,response.getStatus());
+    }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<Response> getCartContent(
@@ -65,6 +79,7 @@ public class CartController {
             Page<CartItem> cartItemPage = cartItemService.findCartItemByUserPaginated(userId, page, size, false);
             Page<ProductDto> paginatedProduct = cartItemPage.map(cartItem -> {
                 ProductDto dto = new ProductDto(cartItem.getProduct());
+                dto.setQuantity(cartItem.getQuantity());
                 return dto;
             });
 

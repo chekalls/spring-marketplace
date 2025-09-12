@@ -1,7 +1,10 @@
 package mg.ecommerce.demo.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import mg.ecommerce.demo.dto.CartItemDto;
+import mg.ecommerce.demo.dto.ProductDto;
 import mg.ecommerce.demo.model.Cart;
 import mg.ecommerce.demo.model.CartItem;
 import mg.ecommerce.demo.model.Product;
@@ -50,25 +54,38 @@ public class CartController {
         this.typeUserService = typeUserService;
     }
 
-
     @GetMapping("/user/{userId}")
     public ResponseEntity<Response> getCartContent(
-        @PathVariable("userId") String userId
-    ){
+            @PathVariable("userId") String userId,
+            @RequestParam(name = "page", defaultValue = "1") Integer page,
+            @RequestParam(name = "size", defaultValue = "15") Integer size) {
         Response response = new Response();
         try {
-            // List<Product> products = cartItemService.
+            Page<CartItem> cartItemPage = cartItemService.findCartItemByUserPaginated(userId, 0, 0, false);
+            Page<ProductDto> paginatedProduct = cartItemPage.map(cartItem -> {
+                ProductDto dto = new ProductDto(cartItem.getProduct());
+                return dto;
+            });
+
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("liste_produit", paginatedProduct.getContent());
+            responseData.put("current_page", paginatedProduct.getNumber());
+            responseData.put("total_page", paginatedProduct.getTotalPages());
+            responseData.put("page_size", paginatedProduct.getSize());
+            responseData.put("total_element", paginatedProduct.getTotalElements());
+
+            ResponseManager.success(response, "", "contenue du panier chargé avec succès");
+            response.setMultidata(responseData);
         } catch (Exception e) {
             ResponseManager.serveurError(response);
         }
-        return new ResponseEntity<>(response,response.getStatus());
+        return new ResponseEntity<>(response, response.getStatus());
     }
- 
+
     @GetMapping("/product/{idProduct}")
     public ResponseEntity<Response> idProductInCart(
-        @PathVariable("idProduct") String productId,
-        @RequestParam("userId") String userId
-    ){
+            @PathVariable("idProduct") String productId,
+            @RequestParam("userId") String userId) {
         Response response = new Response();
         try {
             boolean exists = cartItemService.isProductInUserCart(productId, userId);
@@ -76,7 +93,7 @@ public class CartController {
         } catch (Exception e) {
             ResponseManager.serveurError(response);
         }
-        return new ResponseEntity<>(response,response.getStatus());
+        return new ResponseEntity<>(response, response.getStatus());
     }
 
     @PostMapping
@@ -95,7 +112,7 @@ public class CartController {
                 if (user == null) {
                     ResponseManager.resourceUnavaible(response, "Utilisateur introuvable");
                     return new ResponseEntity<>(response, response.getStatus());
-                }else{
+                } else {
                     TypeUser typeUser = typeUserService.findTypeClient().get();
                     if (user.getTypeUser().getId() == typeUser.getId()) {
                         userCart = cartService.create(user);

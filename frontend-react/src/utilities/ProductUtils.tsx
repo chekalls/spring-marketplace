@@ -14,6 +14,14 @@ export interface Product {
     isInCart: boolean;
 };
 
+export interface ProductPage{
+    liste_produit: Product[];
+    current_page:number;
+    total_page:number;
+    page_size:number;
+    total_element:number;
+}
+
 export interface StockProduct {
     id: number;
     quantity: number;
@@ -24,9 +32,10 @@ export interface StockProduct {
     updatedAt?: string;
 }
 
-export const getUserCartProduct = async (userId: string):Promise<Product[]> => {
+export const getUserCartProduct = async (userId: string):Promise<ProductPage> => {
     try {
-        
+        const res = await api.get(`/cart/user/${userId}`);
+        return res.data.multidata;
     } catch (error) {
         throw new Error("Impossible de récupérer les produit. Une erreur est survenue");
     }

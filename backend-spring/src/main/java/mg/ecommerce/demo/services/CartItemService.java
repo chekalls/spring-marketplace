@@ -44,6 +44,10 @@ public class CartItemService {
         cartItemRepository.save(cartItem);
     }
 
+    public void remove(String productId,String userId){
+        cartItemRepository.removeByProductAndUser(productId, userId);
+    }
+
     public CartItem create(Cart cart,Product product,int quantity){
         CartItem cartItem = new CartItem();
         cartItem.setCart(cart);

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +52,21 @@ public class CartController {
         this.userService = userService;
         this.productService = productService;
         this.typeUserService = typeUserService;
+    }
+
+    @DeleteMapping("/product/{idProduct}")
+    public ResponseEntity<Response> removeItemFromBase(
+        @PathVariable("idProduct") String idProduct,
+        @RequestParam("userId") String userId
+    ){
+        Response response = new Response();
+        try {
+            cartItemService.remove(idProduct, userId);
+            ResponseManager.success(response, null, "produit supprimé du panier");
+        } catch (Exception e) {
+            ResponseManager.serveurError(response);
+        }
+        return new ResponseEntity<>(response,response.getStatus());
     }
 
     @PutMapping("/product/{idProduct}")

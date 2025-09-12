@@ -30,8 +30,11 @@ const CartContent: React.FC = () => {
 
     const handleDelete = async (productId: string) => {
         console.log("Supprimer", productId);
-        // Ici tu peux appeler ton API pour supprimer l'article
-        // puis rappeler fetchProducts() pour rafraîchir la liste
+        try {
+            
+        } catch (error) {
+            console.error("Erreur lors de la suppréssion");
+        }
     };
 
     const handleQuantityChange = async (productId: string, newQuantity: number) => {

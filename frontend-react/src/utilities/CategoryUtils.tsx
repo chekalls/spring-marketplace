@@ -10,21 +10,6 @@ export interface Category {
     imagePath?: string;
 }
 
-export const updateItemQuantity = async (productId: string, userId: string, quantity: number) => {
-    try {
-        const res = await api.put(`/cart/product/${productId}`, null, {
-            params: {
-                userId: userId,
-                quantity: quantity
-            }
-        });
-
-        return res.data;
-    } catch (error) {
-        throw new Error("impossible de modifier la quantité");
-    }
-}
-
 export const fetchCategories = async (): Promise<Category[]> => {
     try {
         const res = await api.get("/categories");

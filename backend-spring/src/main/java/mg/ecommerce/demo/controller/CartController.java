@@ -65,6 +65,7 @@ public class CartController {
             ResponseManager.success(response, null, "produit supprimé du panier");
         } catch (Exception e) {
             ResponseManager.serveurError(response);
+            response.setMessage(e.getMessage());
         }
         return new ResponseEntity<>(response,response.getStatus());
     }

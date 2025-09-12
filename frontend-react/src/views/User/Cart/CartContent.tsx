@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getUserCartProduct, Product, getImageUrl } from "../../../utilities/ProductUtils";
 import { getConnectedUser } from "../../../utilities/UserUtils";
-import { updateItemQuantity } from "../../../utilities/CategoryUtils";
+import { updateItemQuantity, removeProductToCart } from "../../../utilities/CartUtils";
 
 const CartContent: React.FC = () => {
     const PAGE_SIZE = 15;
@@ -29,13 +29,18 @@ const CartContent: React.FC = () => {
     }, []);
 
     const handleDelete = async (productId: string) => {
-        console.log("Supprimer", productId);
         try {
-            
+            await removeProductToCart(productId, userId);
+            setProducts((prevProducts) =>
+                prevProducts.filter((p) => p.id !== productId)
+            );
+
+            console.log(`Produit ${productId} supprimé du panier`);
         } catch (error) {
-            console.error("Erreur lors de la suppréssion");
+            console.error("Erreur lors de la suppression du produit", error);
         }
     };
+
 
     const handleQuantityChange = async (productId: string, newQuantity: number) => {
         newQuantity = Math.max(0, newQuantity);
@@ -45,7 +50,7 @@ const CartContent: React.FC = () => {
             setProducts(prevProducts =>
                 prevProducts.map(product =>
                     product.id === productId
-                        ? { ...product, quantity: newQuantity } 
+                        ? { ...product, quantity: newQuantity }
                         : product
                 )
             );
